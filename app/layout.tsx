@@ -18,7 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               このデータは全て架空のデモデータです。実在の生徒情報は含まれていません。
             </p>
           </div>
-          <div className="max-w-6xl mx-auto p-6">
+          <div className="px-8 py-6">
             {children}
           </div>
         </main>

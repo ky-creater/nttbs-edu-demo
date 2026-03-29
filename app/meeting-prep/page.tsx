@@ -146,7 +146,7 @@ function MeetingPrepContent() {
 
   return (
     <div className="print:ml-0">
-      <div className="max-w-3xl mx-auto print:p-0">
+      <div className="max-w-4xl print:p-0">
         {/* ヘッダー */}
         <div className="mb-8 print:hidden">
           <div className="flex items-center gap-3 mb-1">

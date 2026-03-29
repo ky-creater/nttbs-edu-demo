@@ -95,7 +95,7 @@ export default function LibraryPage() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto py-8 px-4">
+    <div className="max-w-4xl">
       {/* ヘッダー */}
       <div className="mb-6">
         <div className="flex items-center gap-2 mb-1">

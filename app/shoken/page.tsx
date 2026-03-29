@@ -71,7 +71,7 @@ export default function ShokenPage() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto py-8 px-4 space-y-6">
+    <div className="max-w-4xl space-y-6">
       {/* ページヘッダー */}
       <div>
         <div className="flex items-center gap-2 mb-1">

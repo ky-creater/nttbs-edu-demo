@@ -192,7 +192,7 @@ function DocumentsPageInner() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto py-8 px-4">
+    <div className="max-w-4xl">
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900">通知文・文書生成</h1>
         <p className="mt-1 text-sm text-gray-500">
@@ -368,7 +368,7 @@ function DocumentsPageInner() {
 
 export default function DocumentsPage() {
   return (
-    <Suspense fallback={<div className="max-w-2xl mx-auto py-8 px-4 text-sm text-gray-400">読み込み中...</div>}>
+    <Suspense fallback={<div className="max-w-4xl text-sm text-gray-400">読み込み中...</div>}>
       <DocumentsPageInner />
     </Suspense>
   );
