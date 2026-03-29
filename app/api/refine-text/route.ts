@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import Anthropic from '@anthropic-ai/sdk';
-
-const client = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-});
+import { generateText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
 
 export async function POST(request: NextRequest) {
   try {
@@ -13,12 +10,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'currentText and instruction are required' }, { status: 400 });
     }
 
-    const message = await client.messages.create({
-      model: process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-20250514',
-      max_tokens: 2048,
-      messages: [{
-        role: 'user',
-        content: `以下の文書を、指示に従って修正してください。
+    const { text } = await generateText({
+      model: anthropic(process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-20250514'),
+      maxOutputTokens: 2048,
+      prompt: `以下の文書を、指示に従って修正してください。
 
 ## 現在の文書
 ${currentText}
@@ -31,13 +26,7 @@ ${instruction}
 - 文書全体の整合性を保ってください
 - 修正箇所以外は極力変更しないでください
 - 修正後の文書のみを出力してください（説明や前置きは不要）`,
-      }],
     });
-
-    const text = message.content
-      .filter((block) => block.type === 'text')
-      .map((block) => (block as { type: 'text'; text: string }).text)
-      .join('');
 
     return NextResponse.json({ content: text });
   } catch (error) {

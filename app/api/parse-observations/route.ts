@@ -1,9 +1,6 @@
 import { NextResponse } from 'next/server';
-import Anthropic from '@anthropic-ai/sdk';
-
-const client = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-});
+import { generateText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
 
 export async function POST(request: Request) {
   try {
@@ -41,16 +38,11 @@ ${text}
 }
 \`\`\``;
 
-    const message = await client.messages.create({
-      model: process.env.ANTHROPIC_MODEL ?? 'claude-sonnet-4-20250514',
-      max_tokens: 2048,
-      messages: [{ role: 'user', content: prompt }],
+    const { text: rawText } = await generateText({
+      model: anthropic(process.env.ANTHROPIC_MODEL ?? 'claude-sonnet-4-20250514'),
+      maxOutputTokens: 2048,
+      prompt,
     });
-
-    const rawText = message.content
-      .filter(block => block.type === 'text')
-      .map(block => (block as { type: 'text'; text: string }).text)
-      .join('');
 
     const jsonMatch = rawText.match(/```json\s*([\s\S]*?)```/);
     if (!jsonMatch) {

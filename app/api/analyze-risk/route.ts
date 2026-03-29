@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import Anthropic from '@anthropic-ai/sdk';
+import { generateText } from 'ai';
+import { anthropic } from '@ai-sdk/anthropic';
 import { mockStudents } from '@/data/mock-students';
 import { buildRiskAnalysisPrompt } from '@/lib/prompts';
 
@@ -18,27 +19,11 @@ export async function POST(req: NextRequest) {
 
     const prompt = buildRiskAnalysisPrompt(student, observationNotes);
 
-    const client = new Anthropic({
-      apiKey: process.env.ANTHROPIC_API_KEY,
+    const { text } = await generateText({
+      model: anthropic(process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-20250514'),
+      maxOutputTokens: 1024,
+      prompt,
     });
-
-    const message = await client.messages.create({
-      model: process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-20250514',
-      max_tokens: 1024,
-      messages: [
-        {
-          role: 'user',
-          content: prompt,
-        },
-      ],
-    });
-
-    const rawContent = message.content[0];
-    if (rawContent.type !== 'text') {
-      throw new Error('Unexpected response type from AI');
-    }
-
-    const text = rawContent.text;
 
     // Extract JSON from ```json ... ``` block
     const jsonMatch = text.match(/```json\s*([\s\S]*?)```/);
