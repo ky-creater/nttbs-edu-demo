@@ -8,7 +8,7 @@ export interface KnowledgeItem {
   uploadedAt: string;
 }
 
-const STORAGE_KEY = 'edu-demo-knowledge';
+const STORAGE_KEY = 'edu-demo-knowledge-v2';
 
 export const knowledgeCategoryLabels: Record<KnowledgeCategory, string> = {
   template: '書式・テンプレート',
