@@ -1,16 +1,15 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, FileText, MessageSquare, AlertTriangle, Shield, Archive, Users, UserCheck } from 'lucide-react';
+import { LayoutDashboard, Users, PenTool, Archive, UserCheck, AlertTriangle, Shield } from 'lucide-react';
 
 const navItems = [
   { href: '/', label: 'ダッシュボード', icon: LayoutDashboard },
   { href: '/students', label: '生徒一覧', icon: Users },
-  { href: '/shoken', label: '所見ドラフト生成', icon: FileText },
-  { href: '/documents', label: '通知文・文書生成', icon: MessageSquare },
+  { href: '/documents', label: '文書作成', icon: PenTool },
   { href: '/library', label: '文書ライブラリ', icon: Archive },
-  { href: '/meeting-prep', label: '面談準備シート', icon: UserCheck },
-  { href: '/risk', label: '不登校リスク分析', icon: AlertTriangle },
+  { href: '/meeting-prep', label: '面談準備', icon: UserCheck },
+  { href: '/risk', label: 'リスク分析', icon: AlertTriangle },
 ];
 
 export function Sidebar() {
@@ -30,7 +29,7 @@ export function Sidebar() {
 
       <nav className="flex-1 py-4">
         {navItems.map(item => {
-          const isActive = pathname === item.href;
+          const isActive = pathname === item.href || (item.href === '/documents' && pathname === '/shoken');
           const Icon = item.icon;
           return (
             <Link
