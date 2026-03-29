@@ -7,6 +7,7 @@ import { GenerationResult } from '@/components/generation-result';
 import { FileUpload } from '@/components/file-upload';
 import { saveDocument } from '@/lib/document-store';
 import type { DocumentType, Tone } from '@/lib/types';
+import { LlmBadge } from '@/components/llm-badge';
 
 const documentTypes: {
   value: DocumentType;
@@ -14,6 +15,25 @@ const documentTypes: {
   description: string;
   icon: React.ReactNode;
 }[] = [
+  // 日常業務（毎日・毎週）
+  {
+    value: 'absence_reply',
+    label: '欠席連絡返信',
+    description: '保護者からの欠席連絡への返信',
+    icon: <Reply className="w-5 h-5" />,
+  },
+  {
+    value: 'complaint_response',
+    label: '保護者ご相談への回答',
+    description: '保護者からのご意見・ご要望への回答文',
+    icon: <Shield className="w-5 h-5" />,
+  },
+  {
+    value: 'guidance_record',
+    label: '指導記録',
+    description: '生徒指導の経過・対応を記録',
+    icon: <BookOpen className="w-5 h-5" />,
+  },
   {
     value: 'class_newsletter',
     label: '学級通信',
@@ -26,23 +46,19 @@ const documentTypes: {
     description: '行事・連絡事項などの公式通知文',
     icon: <Mail className="w-5 h-5" />,
   },
-  {
-    value: 'complaint_response',
-    label: '保護者ご相談への回答',
-    description: '保護者からのご意見・ご要望への回答文',
-    icon: <Shield className="w-5 h-5" />,
-  },
+  // 定期業務（学期ごと）
   {
     value: 'meeting_memo',
     label: '面談メモ',
     description: '保護者面談の記録・確認事項の整理',
     icon: <ClipboardList className="w-5 h-5" />,
   },
+  // 年次業務（年に1-2回）
   {
-    value: 'guidance_record',
-    label: '指導記録',
-    description: '生徒指導の経過・対応を記録',
-    icon: <BookOpen className="w-5 h-5" />,
+    value: 'event_speech',
+    label: '行事挨拶文',
+    description: '式典・行事での挨拶原稿',
+    icon: <Mic className="w-5 h-5" />,
   },
   {
     value: 'board_report',
@@ -55,18 +71,6 @@ const documentTypes: {
     label: '推薦状・調査書',
     description: '進路に関する推薦文・調査書',
     icon: <Award className="w-5 h-5" />,
-  },
-  {
-    value: 'absence_reply',
-    label: '欠席連絡返信',
-    description: '保護者からの欠席連絡への返信',
-    icon: <Reply className="w-5 h-5" />,
-  },
-  {
-    value: 'event_speech',
-    label: '行事挨拶文',
-    description: '式典・行事での挨拶原稿',
-    icon: <Mic className="w-5 h-5" />,
   },
   {
     value: 'training_report',
@@ -194,10 +198,15 @@ function DocumentsPageInner() {
   return (
     <div className="max-w-4xl">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">通知文・文書生成</h1>
-        <p className="mt-1 text-sm text-gray-500">
-          状況を入力するだけで、すぐに使える文書をAIが生成します。
-        </p>
+        <div className="flex items-center justify-between flex-wrap gap-3">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">通知文・文書生成</h1>
+            <p className="mt-1 text-sm text-gray-500">
+              状況を入力するだけで、すぐに使える文書をAIが生成します。
+            </p>
+          </div>
+          <LlmBadge />
+        </div>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">

@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { AlertTriangle, TrendingUp, Shield, Users, Brain, ChevronRight, Loader2, ChevronDown } from 'lucide-react';
+import { LlmBadge } from '@/components/llm-badge';
 import { mockStudents } from '@/data/mock-students';
 import { calculateRiskScore, calculateRiskBreakdown, getRiskLevel, getRiskColor, getRiskLabel } from '@/lib/risk-calculator';
 import { Student } from '@/lib/types';
@@ -67,8 +68,13 @@ export default function RiskPage() {
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">不登校リスクダッシュボード</h1>
-          <p className="text-sm text-gray-500 mt-1">出欠・成績データをもとにリスクを自動算出し、AIによる個別支援プランを提案します</p>
+          <div className="flex items-center justify-between flex-wrap gap-3">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">不登校リスクダッシュボード</h1>
+              <p className="text-sm text-gray-500 mt-1">出欠・成績データをもとにリスクを自動算出し、AIによる個別支援プランを提案します</p>
+            </div>
+            <LlmBadge />
+          </div>
         </div>
 
         {/* Summary Cards */}

@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import { Loader, FileText, User, BookOpen } from 'lucide-react';
 import { mockStudents } from '@/data/mock-students';
 import { GenerationResult } from '@/components/generation-result';
+import { LlmBadge } from '@/components/llm-badge';
 
 type Semester = 1 | 2 | 3;
 
@@ -73,13 +74,18 @@ export default function ShokenPage() {
   return (
     <div>
       <div className="mb-6">
-        <div className="flex items-center gap-2 mb-1">
-          <FileText className="w-5 h-5 text-primary-600" />
-          <h1 className="text-xl font-semibold text-gray-900">所見ドラフト生成</h1>
+        <div className="flex items-center justify-between flex-wrap gap-3">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <FileText className="w-5 h-5 text-primary-600" />
+              <h1 className="text-xl font-semibold text-gray-900">所見ドラフト生成</h1>
+            </div>
+            <p className="text-sm text-gray-500">
+              生徒を選択して「生成する」を押すと、通知表所見の3パターンを自動作成します。
+            </p>
+          </div>
+          <LlmBadge />
         </div>
-        <p className="text-sm text-gray-500">
-          生徒を選択して「生成する」を押すと、通知表所見の3パターンを自動作成します。
-        </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
