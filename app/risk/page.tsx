@@ -79,7 +79,7 @@ export default function RiskPage() {
                 <AlertTriangle className="w-5 h-5 text-red-500" />
               </div>
               <div>
-                <p className="text-xs text-gray-500 uppercase tracking-wide font-medium">要注意</p>
+                <p className="text-xs text-gray-500 uppercase tracking-wide font-medium">要支援</p>
                 <p className="text-3xl font-bold text-red-600">{highCount}</p>
               </div>
             </div>

@@ -43,7 +43,7 @@ ${attendanceSummary}
 const documentTypeLabels: Record<DocumentType, string> = {
   class_newsletter: '学級通信',
   parent_notice: '保護者向け通知文',
-  complaint_response: 'クレーム対応文書',
+  complaint_response: '保護者ご相談への回答文',
   meeting_memo: '面談メモ',
   guidance_record: '指導記録',
   board_report: '教育委員会報告書',

@@ -10,7 +10,7 @@ import type { DocumentType } from '@/lib/types';
 const TYPE_LABELS: Record<DocumentType, string> = {
   class_newsletter: '学級通信',
   parent_notice: '保護者向け通知',
-  complaint_response: 'クレーム対応',
+  complaint_response: '保護者ご相談対応',
   meeting_memo: '面談メモ',
   guidance_record: '指導記録',
   board_report: '教育委員会報告',
@@ -37,7 +37,7 @@ const FILTER_TABS: { value: DocumentType | 'all'; label: string }[] = [
   { value: 'all', label: '全て' },
   { value: 'class_newsletter', label: '学級通信' },
   { value: 'parent_notice', label: '保護者向け通知' },
-  { value: 'complaint_response', label: 'クレーム対応' },
+  { value: 'complaint_response', label: '保護者ご相談対応' },
   { value: 'meeting_memo', label: '面談メモ' },
   { value: 'guidance_record', label: '指導記録' },
   { value: 'board_report', label: '教育委員会報告' },

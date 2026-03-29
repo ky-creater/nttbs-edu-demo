@@ -89,7 +89,7 @@ export function getRiskColor(level: RiskLevel): string {
 
 export function getRiskLabel(level: RiskLevel): string {
   switch (level) {
-    case 'high': return '要注意';
+    case 'high': return '要支援';
     case 'medium': return '経過観察';
     case 'low': return '安定';
   }

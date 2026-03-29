@@ -28,8 +28,8 @@ const documentTypes: {
   },
   {
     value: 'complaint_response',
-    label: 'クレーム対応文書',
-    description: '保護者からの苦情・要望への回答文',
+    label: '保護者ご相談への回答',
+    description: '保護者からのご意見・ご要望への回答文',
     icon: <Shield className="w-5 h-5" />,
   },
   {
@@ -85,7 +85,7 @@ const tones: { value: Tone; label: string }[] = [
 const documentTypeLabels: Record<DocumentType, string> = {
   class_newsletter: '学級通信',
   parent_notice: '保護者向け通知',
-  complaint_response: 'クレーム対応文書',
+  complaint_response: '保護者ご相談への回答',
   meeting_memo: '面談メモ',
   guidance_record: '指導記録',
   board_report: '教育委員会報告',

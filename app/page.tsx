@@ -51,7 +51,7 @@ const workflowCategories = [
     tasks: [
       { name: '出欠管理・欠席連絡対応', ai: true, link: '/documents?type=absence_reply', aiLabel: '欠席連絡返信を自動生成' },
       { name: '授業準備・教材作成', ai: false, aiLabel: '' },
-      { name: '保護者対応・連絡', ai: true, link: '/documents?type=complaint_response', aiLabel: 'クレーム対応文書を生成' },
+      { name: '保護者対応・連絡', ai: true, link: '/documents?type=complaint_response', aiLabel: '保護者ご相談への回答文を生成' },
       { name: '指導記録・生徒観察', ai: true, link: '/documents?type=guidance_record', aiLabel: '指導記録を構造化' },
       { name: '学級通信の作成', ai: true, link: '/documents?type=class_newsletter', aiLabel: '学級通信ドラフトを生成' },
     ],
@@ -89,7 +89,7 @@ const workflowCategories = [
     tasks: [
       { name: '不登校・問題行動への対応', ai: true, link: '/risk', aiLabel: 'リスク分析+対応提案' },
       { name: 'いじめ・トラブル対応', ai: true, link: '/documents?type=guidance_record', aiLabel: '対応記録+報告書' },
-      { name: '保護者クレーム対応', ai: true, link: '/documents?type=complaint_response', aiLabel: '対応スクリプト生成' },
+      { name: '保護者ご相談対応', ai: true, link: '/documents?type=complaint_response', aiLabel: 'ご相談対応の回答文作成' },
     ],
   },
 ];
@@ -193,7 +193,7 @@ export default function DashboardPage() {
     {
       href: '/documents',
       title: '通知文・文書生成',
-      description: '学級通信、保護者通知、クレーム対応文書をAIがドラフト。文体も選択可能。',
+      description: '学級通信、保護者通知、保護者ご相談への回答文をAIがドラフト。文体も選択可能。',
       badge: 'AI生成',
     },
     {
@@ -367,7 +367,7 @@ export default function DashboardPage() {
       {/* 要注意生徒一覧 */}
       <div className="mt-8 bg-white rounded-lg border border-gray-200 p-5 shadow-sm">
         <div className="flex items-center gap-3 mb-3">
-          <h2 className="text-sm font-semibold text-gray-900">要注意生徒一覧</h2>
+          <h2 className="text-sm font-semibold text-gray-900">支援が必要な生徒一覧</h2>
           <span className="text-[10px] text-gray-400">📊 出欠・成績データに基づく自動判定</span>
         </div>
         <div className="space-y-2">
