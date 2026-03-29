@@ -1,13 +1,15 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, FileText, MessageSquare, AlertTriangle, Shield, Archive } from 'lucide-react';
+import { LayoutDashboard, FileText, MessageSquare, AlertTriangle, Shield, Archive, Users, UserCheck } from 'lucide-react';
 
 const navItems = [
   { href: '/', label: 'ダッシュボード', icon: LayoutDashboard },
+  { href: '/students', label: '生徒一覧', icon: Users },
   { href: '/shoken', label: '所見ドラフト生成', icon: FileText },
   { href: '/documents', label: '通知文・文書生成', icon: MessageSquare },
   { href: '/library', label: '文書ライブラリ', icon: Archive },
+  { href: '/meeting-prep', label: '面談準備シート', icon: UserCheck },
   { href: '/risk', label: '不登校リスク分析', icon: AlertTriangle },
 ];
 
