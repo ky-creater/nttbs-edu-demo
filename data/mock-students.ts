@@ -7,20 +7,32 @@ function generateAttendance(pattern: 'good' | 'moderate' | 'poor' | 'declining')
     const schoolDays = month === 7 || month === 3 ? 15 : 20;
     switch (pattern) {
       case 'good':
+        // 年間0-5日欠席、遅刻0-3回（大半の生徒）
+        absent = Math.random() < 0.6 ? 0 : 1;
+        late = Math.random() < 0.7 ? 0 : 1;
+        break;
+      case 'moderate':
+        // 年間5-15日欠席、遅刻5-15回（少し気になる生徒）
         absent = Math.floor(Math.random() * 2);
         late = Math.floor(Math.random() * 2);
         break;
-      case 'moderate':
-        absent = 1 + Math.floor(Math.random() * 3);
-        late = Math.floor(Math.random() * 4);
-        break;
       case 'poor':
-        absent = 4 + Math.floor(Math.random() * 6);
-        late = 2 + Math.floor(Math.random() * 5);
+        // 年間20-35日欠席（不登校ライン付近）、遅刻月1-3回
+        absent = 2 + Math.floor(Math.random() * 2);
+        late = 1 + Math.floor(Math.random() * 2);
         break;
       case 'declining':
-        absent = Math.min(Math.floor(i * 0.8 + Math.random() * 3), schoolDays - 5);
-        late = Math.min(Math.floor(i * 0.5 + Math.random() * 2), 8);
+        // 前半は普通、後半で月2-4日欠席に増加（トレンドが見える）
+        if (i < 4) {
+          absent = Math.random() < 0.7 ? 0 : 1;
+          late = Math.random() < 0.5 ? 0 : 1;
+        } else if (i < 7) {
+          absent = 1 + Math.floor(Math.random() * 2);
+          late = 1 + Math.floor(Math.random() * 2);
+        } else {
+          absent = 2 + Math.floor(Math.random() * 3);
+          late = 2 + Math.floor(Math.random() * 2);
+        }
         break;
     }
     return {
