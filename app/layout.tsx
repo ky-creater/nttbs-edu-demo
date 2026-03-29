@@ -1,0 +1,23 @@
+import type { Metadata } from 'next';
+import './globals.css';
+import { Sidebar } from '@/components/sidebar';
+
+export const metadata: Metadata = {
+  title: '校務支援AI プラットフォーム',
+  description: '校務データを安全にAI活用し、教員業務の効率化と学校運営の高度化を実現',
+};
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="ja">
+      <body className="flex min-h-screen bg-surface">
+        <Sidebar />
+        <main className="flex-1 ml-64">
+          <div className="max-w-6xl mx-auto p-6">
+            {children}
+          </div>
+        </main>
+      </body>
+    </html>
+  );
+}
