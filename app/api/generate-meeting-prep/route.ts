@@ -15,10 +15,11 @@ const meetingTypeLabels: Record<string, string> = {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { studentId, meetingType, additionalNotes } = body as {
+    const { studentId, meetingType, additionalNotes, observationNotes } = body as {
       studentId: string;
       meetingType: 'regular' | 'concern' | 'incident';
       additionalNotes?: string;
+      observationNotes?: string;
     };
 
     if (!studentId || !meetingType) {
@@ -66,6 +67,9 @@ ${attendanceText}
 
 ## 面談種別
 ${meetingTypeLabels[meetingType] ?? meetingType}
+
+## 担任の観察メモ（時系列）
+${observationNotes || 'なし'}
 
 ## 追加メモ（教員入力）
 ${additionalNotes || 'なし'}

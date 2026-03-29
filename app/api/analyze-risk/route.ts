@@ -5,7 +5,7 @@ import { buildRiskAnalysisPrompt } from '@/lib/prompts';
 
 export async function POST(req: NextRequest) {
   try {
-    const { studentId } = await req.json();
+    const { studentId, observationNotes } = await req.json() as { studentId: string; observationNotes?: string };
 
     if (!studentId) {
       return NextResponse.json({ error: 'studentId is required' }, { status: 400 });
@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Student not found' }, { status: 404 });
     }
 
-    const prompt = buildRiskAnalysisPrompt(student);
+    const prompt = buildRiskAnalysisPrompt(student, observationNotes);
 
     const client = new Anthropic({
       apiKey: process.env.ANTHROPIC_API_KEY,

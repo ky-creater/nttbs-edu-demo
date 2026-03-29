@@ -51,7 +51,7 @@ const workflowCategories = [
     tasks: [
       { name: '出欠管理・欠席連絡対応', ai: true, aiLabel: '欠席連絡返信を自動生成', href: '/documents?type=absence_reply' },
       { name: '保護者対応・連絡', ai: true, aiLabel: '保護者ご相談への回答文を生成', href: '/documents?type=complaint_response' },
-      { name: '指導記録・生徒観察', ai: true, aiLabel: '指導記録を構造化', href: '/documents?type=guidance_record' },
+      { name: '指導記録・生徒観察', ai: true, aiLabel: '観察メモ+指導記録を構造化', href: '/students' },
       { name: '学級通信の作成', ai: true, aiLabel: '学級通信ドラフトを生成', href: '/documents?type=class_newsletter' },
       { name: '授業準備・教材作成', ai: false, aiLabel: '今後対応予定' },
     ],

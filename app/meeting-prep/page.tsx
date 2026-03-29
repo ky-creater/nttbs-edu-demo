@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { mockStudents } from '@/data/mock-students';
 import { LlmBadge } from '@/components/llm-badge';
+import { getObservationsText } from '@/lib/observation-store';
 import { calculateRiskScore, getRiskLevel, getRiskLabel, getRiskColor } from '@/lib/risk-calculator';
 
 type MeetingType = 'regular' | 'concern' | 'incident';
@@ -83,7 +84,7 @@ function MeetingPrepContent() {
       const res = await fetch('/api/generate-meeting-prep', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ studentId: selectedStudentId, meetingType, additionalNotes }),
+        body: JSON.stringify({ studentId: selectedStudentId, meetingType, additionalNotes, observationNotes: getObservationsText(selectedStudentId) }),
       });
       const data = await res.json();
       if (!res.ok) {

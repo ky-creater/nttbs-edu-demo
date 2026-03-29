@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import { AlertTriangle, TrendingUp, Shield, Users, Brain, ChevronRight, Loader2, ChevronDown } from 'lucide-react';
 import { LlmBadge } from '@/components/llm-badge';
+import { getObservationsText } from '@/lib/observation-store';
 import { mockStudents } from '@/data/mock-students';
 import { calculateRiskScore, calculateRiskBreakdown, getRiskLevel, getRiskColor, getRiskLabel } from '@/lib/risk-calculator';
 import { Student } from '@/lib/types';
@@ -47,7 +48,7 @@ export default function RiskPage() {
       const res = await fetch('/api/analyze-risk', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ studentId }),
+        body: JSON.stringify({ studentId, observationNotes: getObservationsText(studentId) }),
       });
       if (!res.ok) throw new Error('分析に失敗しました');
       const data = await res.json();

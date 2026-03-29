@@ -91,7 +91,7 @@ ${toneLabels[tone]}
 \`\`\``;
 }
 
-export function buildRiskAnalysisPrompt(student: Student): string {
+export function buildRiskAnalysisPrompt(student: Student, observationNotes?: string): string {
   const recentAttendance = student.attendance.slice(-3);
   const attendanceDetail = recentAttendance
     .map(a => `${a.month}月: 欠席${a.absent}日/遅刻${a.late}回/早退${a.earlyLeave}回`)
@@ -110,6 +110,9 @@ ${attendanceDetail}
 
 ## 成績概要
 ${student.grades.map(g => `${g.subject}: ${g.score}点`).join('、')}
+
+## 担任の観察メモ（時系列）
+${observationNotes || 'なし'}
 
 ## 出力形式
 以下のJSON形式で分析結果を出力してください。

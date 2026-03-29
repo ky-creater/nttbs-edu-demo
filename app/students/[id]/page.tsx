@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { mockStudents } from '@/data/mock-students';
 import { calculateRiskScore, getRiskLevel, getRiskColor, getRiskLabel } from '@/lib/risk-calculator';
 import { ArrowLeft, FileText, Users, AlertTriangle } from 'lucide-react';
+import { ObservationTimeline } from '@/components/observation-timeline';
 
 const MONTH_LABELS: Record<number, string> = {
   4: '4月', 5: '5月', 6: '6月', 7: '7月',
@@ -191,7 +192,10 @@ export default function StudentProfilePage({ params }: { params: { id: string } 
         </div>
       </div>
 
-      {/* セクション4: AIアクションボタン */}
+      {/* セクション4: 観察メモ */}
+      <ObservationTimeline studentId={student.id} />
+
+      {/* セクション5: AIアクションボタン */}
       <p className="text-[10px] text-gray-400 mb-2">🤖 上記の校務データをAIが統合分析します</p>
       <div className="grid grid-cols-3 gap-3">
         <Link
