@@ -252,6 +252,9 @@ function DocumentsPageInner() {
           <label className="block text-sm font-medium text-gray-700 mb-2">
             参考文書をアップロード
             <span className="ml-1 text-xs font-normal text-gray-400">（任意）</span>
+            <span className="ml-2 text-xs font-normal text-primary-600">
+              → 「{documentTypeLabels[selectedType]}」の生成に反映されます
+            </span>
           </label>
           <FileUpload
             onTextExtracted={handleTextExtracted}
