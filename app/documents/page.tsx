@@ -9,6 +9,7 @@ import { saveDocument } from '@/lib/document-store';
 import type { DocumentType, Tone } from '@/lib/types';
 import { LlmBadge } from '@/components/llm-badge';
 import { getKnowledgeContext } from '@/lib/knowledge-store';
+import { generateDocx } from '@/lib/docx-export';
 
 const documentTypes: {
   value: DocumentType;
@@ -360,7 +361,22 @@ function DocumentsPageInner() {
       {result && (
         <div className="mt-6">
           <GenerationResult content={result} label={documentTypeLabels[selectedType]} onRefine={handleRefine} />
-          <div className="mt-3 flex justify-end">
+          <div className="mt-3 flex justify-end gap-2">
+            <button
+              onClick={async () => {
+                if (!result) return;
+                const blob = await generateDocx(result, selectedType);
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${documentTypeLabels[selectedType]}_${new Date().toISOString().split('T')[0]}.docx`;
+                a.click();
+                URL.revokeObjectURL(url);
+              }}
+              className="flex items-center gap-2 bg-blue-600 text-white rounded-md px-4 py-2 text-sm font-medium hover:bg-blue-700 transition-colors"
+            >
+              Wordでダウンロード
+            </button>
             <button
               onClick={handleSave}
               className="flex items-center gap-2 bg-emerald-600 text-white rounded-md px-4 py-2 text-sm font-medium hover:bg-emerald-700 transition-colors"
