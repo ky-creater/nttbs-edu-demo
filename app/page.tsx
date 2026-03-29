@@ -1,7 +1,46 @@
 import { mockStudents } from '@/data/mock-students';
-import { calculateRiskScore, getRiskLevel } from '@/lib/risk-calculator';
+import { calculateRiskScore, getRiskLevel, calculateRiskBreakdown } from '@/lib/risk-calculator';
 import { Users, FileText, AlertTriangle, TrendingUp } from 'lucide-react';
 import Link from 'next/link';
+
+function countAbsenceIncreasing(students: typeof mockStudents): number {
+  return students.filter(s => {
+    const attendance = s.attendance;
+    if (attendance.length < 6) return false;
+    const early = attendance.slice(0, 3);
+    const recent = attendance.slice(-3);
+    const earlyAvg = early.reduce((sum, m) => sum + m.absent, 0) / 3;
+    const recentAvg = recent.reduce((sum, m) => sum + m.absent, 0) / 3;
+    return recentAvg > earlyAvg * 2 && recentAvg > 0;
+  }).length;
+}
+
+function countGradeLow(students: typeof mockStudents): number {
+  return students.filter(s => {
+    const avg = s.grades.reduce((sum, g) => sum + g.score, 0) / (s.grades.length || 1);
+    return avg < 55;
+  }).length;
+}
+
+function countLatenessTendency(students: typeof mockStudents): number {
+  return students.filter(s => {
+    const recent = s.attendance.slice(-3);
+    const totalLate = recent.reduce((sum, m) => sum + m.late, 0);
+    return totalLate >= 5;
+  }).length;
+}
+
+function getTopRiskFactor(student: (typeof mockStudents)[0]): string {
+  const bd = calculateRiskBreakdown(student);
+  const factors = [
+    { label: '欠席増加', score: bd.trend.score },
+    { label: '欠席多数', score: bd.absence.score },
+    { label: '遅刻傾向', score: bd.lateness.score },
+    { label: '成績低下', score: bd.grades.score },
+  ];
+  const top = factors.reduce((prev, cur) => (cur.score > prev.score ? cur : prev));
+  return top.score > 0 ? top.label : '複合要因';
+}
 
 export default function DashboardPage() {
   const studentsWithRisk = mockStudents.map(s => ({
@@ -10,17 +49,43 @@ export default function DashboardPage() {
   }));
 
   const totalStudents = studentsWithRisk.length;
-  const highRisk = studentsWithRisk.filter(s => getRiskLevel(s.riskScore!) === 'high').length;
-  const mediumRisk = studentsWithRisk.filter(s => getRiskLevel(s.riskScore!) === 'medium').length;
-  const avgScore = Math.round(
-    studentsWithRisk.reduce((sum, s) => sum + s.grades.reduce((gs, g) => gs + g.score, 0) / s.grades.length, 0) / totalStudents
-  );
+  const absenceIncreasing = countAbsenceIncreasing(mockStudents);
+  const gradeLow = countGradeLow(mockStudents);
+  const latenessTendency = countLatenessTendency(mockStudents);
 
   const kpis = [
-    { label: '生徒数', value: totalStudents, unit: '名', icon: Users, color: 'bg-primary-50 text-primary-600' },
-    { label: '要注意生徒', value: highRisk, unit: '名', icon: AlertTriangle, color: 'bg-red-50 text-red-600' },
-    { label: '経過観察', value: mediumRisk, unit: '名', icon: TrendingUp, color: 'bg-amber-50 text-amber-600' },
-    { label: '平均点', value: avgScore, unit: '点', icon: FileText, color: 'bg-emerald-50 text-emerald-600' },
+    {
+      label: '生徒数',
+      value: totalStudents,
+      unit: '名',
+      icon: Users,
+      color: 'bg-primary-50 text-primary-600',
+      source: '校務支援システム（学籍）',
+    },
+    {
+      label: '欠席増加中',
+      value: absenceIncreasing,
+      unit: '名',
+      icon: AlertTriangle,
+      color: 'bg-red-50 text-red-600',
+      source: '校務支援システム（出欠管理）',
+    },
+    {
+      label: '成績低下',
+      value: gradeLow,
+      unit: '名',
+      icon: TrendingUp,
+      color: 'bg-amber-50 text-amber-600',
+      source: '校務支援システム（成績管理）',
+    },
+    {
+      label: '遅刻傾向',
+      value: latenessTendency,
+      unit: '名',
+      icon: FileText,
+      color: 'bg-orange-50 text-orange-600',
+      source: '校務支援システム（出欠管理）',
+    },
   ];
 
   const features = [
@@ -66,6 +131,7 @@ export default function DashboardPage() {
                 <span className="text-2xl font-bold text-gray-900">{kpi.value}</span>
                 <span className="text-sm text-gray-400">{kpi.unit}</span>
               </div>
+              <p className="text-[10px] text-gray-400 mt-2">📊 {kpi.source}</p>
             </div>
           );
         })}
@@ -94,7 +160,10 @@ export default function DashboardPage() {
       </div>
 
       <div className="mt-8 bg-white rounded-lg border border-gray-200 p-5 shadow-sm">
-        <h2 className="text-sm font-semibold text-gray-900 mb-3">要注意生徒一覧</h2>
+        <div className="flex items-center gap-3 mb-3">
+          <h2 className="text-sm font-semibold text-gray-900">要注意生徒一覧</h2>
+          <span className="text-[10px] text-gray-400">📊 出欠・成績データに基づく自動判定</span>
+        </div>
         <div className="space-y-2">
           {studentsWithRisk
             .filter(s => getRiskLevel(s.riskScore!) !== 'low')
@@ -103,8 +172,11 @@ export default function DashboardPage() {
             .map(student => (
               <div key={student.id} className="flex items-center justify-between py-2 px-3 rounded-md hover:bg-gray-50">
                 <div className="flex items-center gap-3">
-                  <span className="text-sm font-medium text-gray-900">{student.name}</span>
-                  <span className="text-xs text-gray-400">{student.grade}年{student.class}組</span>
+                  <div>
+                    <span className="text-sm font-medium text-gray-900">{student.name}</span>
+                    <span className="text-xs text-gray-400 ml-2">{student.grade}年{student.class}組</span>
+                    <p className="text-xs text-gray-400">主要因: {getTopRiskFactor(student)}</p>
+                  </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="w-24 h-2 bg-gray-100 rounded-full overflow-hidden">

@@ -1,8 +1,24 @@
 import { Student, RiskLevel } from './types';
 
-export function calculateRiskScore(student: Student): number {
+export interface RiskBreakdown {
+  total: number;
+  absence: { score: number; max: 40; label: string };
+  lateness: { score: number; max: 20; label: string };
+  trend: { score: number; max: 30; label: string };
+  grades: { score: number; max: 10; label: string };
+}
+
+export function calculateRiskBreakdown(student: Student): RiskBreakdown {
   const attendance = student.attendance;
-  if (!attendance.length) return 0;
+  if (!attendance.length) {
+    return {
+      total: 0,
+      absence: { score: 0, max: 40, label: '欠席なし' },
+      lateness: { score: 0, max: 20, label: '遅刻なし' },
+      trend: { score: 0, max: 30, label: '変化なし' },
+      grades: { score: 0, max: 10, label: '問題なし' },
+    };
+  }
 
   const totalAbsent = attendance.reduce((sum, m) => sum + m.absent, 0);
   const totalLate = attendance.reduce((sum, m) => sum + m.late, 0);
@@ -11,24 +27,50 @@ export function calculateRiskScore(student: Student): number {
   const absentRate = totalAbsent / totalDays;
   const lateRate = totalLate / totalDays;
 
-  // Trend: compare last 3 months vs first 3 months
   const recent = attendance.slice(-3);
   const early = attendance.slice(0, 3);
   const recentAbsentAvg = recent.reduce((s, m) => s + m.absent, 0) / 3;
   const earlyAbsentAvg = early.reduce((s, m) => s + m.absent, 0) / 3;
   const trendFactor = Math.max(0, (recentAbsentAvg - earlyAbsentAvg) / 5);
 
-  let score = 0;
-  score += Math.min(absentRate * 200, 40);
-  score += Math.min(lateRate * 100, 20);
-  score += Math.min(trendFactor * 30, 30);
+  const absenceScore = Math.min(Math.round(absentRate * 200), 40);
+  const latenessScore = Math.min(Math.round(lateRate * 100), 20);
+  const trendScore = Math.min(Math.round(trendFactor * 30), 30);
 
-  // Grade factor
-  const avgScore = student.grades.reduce((s, g) => s + g.score, 0) / (student.grades.length || 1);
-  if (avgScore < 40) score += 10;
-  else if (avgScore < 55) score += 5;
+  const avgGrade = student.grades.reduce((s, g) => s + g.score, 0) / (student.grades.length || 1);
+  const gradesScore = avgGrade < 40 ? 10 : avgGrade < 55 ? 5 : 0;
 
-  return Math.min(Math.round(score), 100);
+  const total = Math.min(absenceScore + latenessScore + trendScore + gradesScore, 100);
+
+  return {
+    total,
+    absence: {
+      score: absenceScore,
+      max: 40,
+      label: `年間${totalAbsent}日欠席（出席率${Math.round((1 - absentRate) * 100)}%）`,
+    },
+    lateness: {
+      score: latenessScore,
+      max: 20,
+      label: `年間${totalLate}回遅刻`,
+    },
+    trend: {
+      score: trendScore,
+      max: 30,
+      label: trendScore > 0
+        ? `直近3ヶ月で悪化傾向（月平均欠席 ${earlyAbsentAvg.toFixed(1)}日→${recentAbsentAvg.toFixed(1)}日）`
+        : '悪化傾向なし',
+    },
+    grades: {
+      score: gradesScore,
+      max: 10,
+      label: gradesScore > 0 ? `平均${Math.round(avgGrade)}点（学力面の懸念あり）` : `平均${Math.round(avgGrade)}点（問題なし）`,
+    },
+  };
+}
+
+export function calculateRiskScore(student: Student): number {
+  return calculateRiskBreakdown(student).total;
 }
 
 export function getRiskLevel(score: number): RiskLevel {

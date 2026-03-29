@@ -69,7 +69,7 @@ export default function StudentProfilePage({ params }: { params: { id: string } 
 
       {/* セクション1: 出欠状況 */}
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 mb-5">
-        <h2 className="text-base font-semibold text-gray-800 mb-4">出欠状況</h2>
+        <h2 className="text-base font-semibold text-gray-800 mb-4">出欠状況<span className="text-[10px] text-gray-400 font-normal ml-2">📊 校務支援システム（出欠管理）</span></h2>
 
         <div className="space-y-2 mb-4">
           {student.attendance.map(m => {
@@ -141,7 +141,7 @@ export default function StudentProfilePage({ params }: { params: { id: string } 
 
       {/* セクション2: 成績一覧 */}
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 mb-5">
-        <h2 className="text-base font-semibold text-gray-800 mb-4">成績一覧</h2>
+        <h2 className="text-base font-semibold text-gray-800 mb-4">成績一覧<span className="text-[10px] text-gray-400 font-normal ml-2">📊 校務支援システム（成績管理）</span></h2>
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-gray-50 text-gray-500 text-xs">
@@ -173,7 +173,7 @@ export default function StudentProfilePage({ params }: { params: { id: string } 
 
       {/* セクション3: 活動・メモ */}
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 mb-5">
-        <h2 className="text-base font-semibold text-gray-800 mb-3">活動・担任メモ</h2>
+        <h2 className="text-base font-semibold text-gray-800 mb-3">活動・担任メモ<span className="text-[10px] text-gray-400 font-normal ml-2">📝 教員入力</span></h2>
         {student.activities.length > 0 ? (
           <div className="flex flex-wrap gap-2 mb-4">
             {student.activities.map((act, i) => (
@@ -192,6 +192,7 @@ export default function StudentProfilePage({ params }: { params: { id: string } 
       </div>
 
       {/* セクション4: AIアクションボタン */}
+      <p className="text-[10px] text-gray-400 mb-2">🤖 上記の校務データをAIが統合分析します</p>
       <div className="grid grid-cols-3 gap-3">
         <Link
           href={`/shoken?studentId=${student.id}`}
