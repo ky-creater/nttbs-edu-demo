@@ -10,6 +10,7 @@ import type { DocumentType, Tone } from '@/lib/types';
 import { LlmBadge } from '@/components/llm-badge';
 import { getKnowledgeContext } from '@/lib/knowledge-store';
 import { generateDocx } from '@/lib/docx-export';
+import { generatePdf } from '@/lib/pdf-export';
 
 const documentTypes: {
   value: DocumentType;
@@ -362,6 +363,21 @@ function DocumentsPageInner() {
         <div className="mt-6">
           <GenerationResult content={result} label={documentTypeLabels[selectedType]} onRefine={handleRefine} />
           <div className="mt-3 flex justify-end gap-2">
+            <button
+              onClick={async () => {
+                if (!result) return;
+                const blob = await generatePdf(result, selectedType);
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${documentTypeLabels[selectedType]}_${new Date().toISOString().split('T')[0]}.pdf`;
+                a.click();
+                URL.revokeObjectURL(url);
+              }}
+              className="flex items-center gap-2 bg-red-600 text-white rounded-md px-4 py-2 text-sm font-medium hover:bg-red-700 transition-colors"
+            >
+              PDFでダウンロード
+            </button>
             <button
               onClick={async () => {
                 if (!result) return;
