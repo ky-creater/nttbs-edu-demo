@@ -49,10 +49,10 @@ const workflowCategories = [
     icon: Calendar,
     color: 'blue',
     tasks: [
-      { name: '出欠管理・欠席連絡対応', ai: true, aiLabel: '欠席連絡返信を自動生成' },
-      { name: '保護者対応・連絡', ai: true, aiLabel: '保護者ご相談への回答文を生成' },
-      { name: '指導記録・生徒観察', ai: true, aiLabel: '指導記録を構造化' },
-      { name: '学級通信の作成', ai: true, aiLabel: '学級通信ドラフトを生成' },
+      { name: '出欠管理・欠席連絡対応', ai: true, aiLabel: '欠席連絡返信を自動生成', href: '/documents?type=absence_reply' },
+      { name: '保護者対応・連絡', ai: true, aiLabel: '保護者ご相談への回答文を生成', href: '/documents?type=complaint_response' },
+      { name: '指導記録・生徒観察', ai: true, aiLabel: '指導記録を構造化', href: '/documents?type=guidance_record' },
+      { name: '学級通信の作成', ai: true, aiLabel: '学級通信ドラフトを生成', href: '/documents?type=class_newsletter' },
       { name: '授業準備・教材作成', ai: false, aiLabel: '今後対応予定' },
     ],
   },
@@ -62,9 +62,9 @@ const workflowCategories = [
     icon: ClipboardCheck,
     color: 'emerald',
     tasks: [
-      { name: '所見作成・通知表', ai: true, aiLabel: 'AIが3パターン生成' },
-      { name: '成績処理・分析', ai: true, aiLabel: '成績データをAI分析' },
-      { name: '保護者面談の準備', ai: true, aiLabel: '面談準備シートを自動生成' },
+      { name: '所見作成・通知表', ai: true, aiLabel: 'AIが3パターン生成', href: '/shoken' },
+      { name: '成績処理・分析', ai: true, aiLabel: '成績データをAI分析', href: '/risk' },
+      { name: '保護者面談の準備', ai: true, aiLabel: '面談準備シートを自動生成', href: '/meeting-prep' },
       { name: 'テスト作成・採点', ai: false, aiLabel: '今後対応予定' },
     ],
   },
@@ -74,10 +74,10 @@ const workflowCategories = [
     icon: CalendarDays,
     color: 'violet',
     tasks: [
-      { name: '行事運営・挨拶文', ai: true, aiLabel: '行事挨拶文を生成' },
-      { name: '教育委員会への報告', ai: true, aiLabel: '報告書ドラフトを生成' },
-      { name: '進路指導・推薦状', ai: true, aiLabel: '推薦状・調査書を生成' },
-      { name: '研修報告の作成', ai: true, aiLabel: '研修報告を生成' },
+      { name: '行事運営・挨拶文', ai: true, aiLabel: '行事挨拶文を生成', href: '/documents?type=event_speech' },
+      { name: '教育委員会への報告', ai: true, aiLabel: '報告書ドラフトを生成', href: '/documents?type=board_report' },
+      { name: '進路指導・推薦状', ai: true, aiLabel: '推薦状・調査書を生成', href: '/documents?type=recommendation' },
+      { name: '研修報告の作成', ai: true, aiLabel: '研修報告を生成', href: '/documents?type=training_report' },
       { name: '引き継ぎ・年度末処理', ai: false, aiLabel: '今後対応予定' },
     ],
   },
@@ -87,9 +87,9 @@ const workflowCategories = [
     icon: AlertTriangle,
     color: 'red',
     tasks: [
-      { name: '不登校・問題行動への対応', ai: true, aiLabel: 'リスク分析+対応提案' },
-      { name: 'いじめ・トラブル対応', ai: true, aiLabel: '対応記録+報告書' },
-      { name: '保護者ご相談対応', ai: true, aiLabel: 'ご相談対応の回答文作成' },
+      { name: '不登校・問題行動への対応', ai: true, aiLabel: 'リスク分析+対応提案', href: '/risk' },
+      { name: 'いじめ・トラブル対応', ai: true, aiLabel: '対応記録+報告書', href: '/documents?type=guidance_record' },
+      { name: '保護者ご相談対応', ai: true, aiLabel: 'ご相談対応の回答文作成', href: '/documents?type=complaint_response' },
     ],
   },
 ];
@@ -235,9 +235,9 @@ export default function DashboardPage() {
 
                 {/* タスク一覧 */}
                 <ul className="space-y-1.5">
-                  {category.tasks.map(task => (
-                    <li key={task.name}>
-                      <div className="flex items-start gap-2 px-2 py-1.5">
+                  {category.tasks.map(task => {
+                    const content = (
+                      <div className={`flex items-start gap-2 px-2 py-1.5 rounded-md transition-colors ${task.href ? 'hover:bg-white/60 cursor-pointer' : ''}`}>
                         {task.ai ? (
                           <CheckCircle2 className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
                         ) : (
@@ -256,9 +256,22 @@ export default function DashboardPage() {
                             </p>
                           )}
                         </div>
+                        {task.href && (
+                          <span className="text-gray-300 mt-0.5 flex-shrink-0 text-xs">→</span>
+                        )}
                       </div>
-                    </li>
-                  ))}
+                    );
+
+                    return (
+                      <li key={task.name}>
+                        {task.href ? (
+                          <Link href={task.href}>{content}</Link>
+                        ) : (
+                          content
+                        )}
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
             );
