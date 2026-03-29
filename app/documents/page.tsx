@@ -1,8 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Newspaper, Mail, Shield, ClipboardList } from 'lucide-react';
 import { GenerationResult } from '@/components/generation-result';
+import { FileUpload } from '@/components/file-upload';
+import { saveDocument } from '@/lib/document-store';
 import type { DocumentType, Tone } from '@/lib/types';
 
 const documentTypes: {
@@ -50,7 +53,8 @@ const documentTypeLabels: Record<DocumentType, string> = {
   meeting_memo: '面談メモ',
 };
 
-export default function DocumentsPage() {
+function DocumentsPageInner() {
+  const searchParams = useSearchParams();
   const [selectedType, setSelectedType] = useState<DocumentType>('parent_notice');
   const [context, setContext] = useState('');
   const [tone, setTone] = useState<Tone>('formal');
@@ -59,6 +63,42 @@ export default function DocumentsPage() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [showSavedToast, setShowSavedToast] = useState(false);
+  const [uploadedText, setUploadedText] = useState<string | null>(null);
+  const [uploadedFileName, setUploadedFileName] = useState<string>('');
+
+  useEffect(() => {
+    const ctxParam = searchParams.get('context');
+    const typeParam = searchParams.get('type') as DocumentType | null;
+    if (ctxParam) setContext(ctxParam);
+    if (typeParam && documentTypes.some((d) => d.value === typeParam)) {
+      setSelectedType(typeParam);
+    }
+  }, [searchParams]);
+
+  const handleSave = () => {
+    if (!result) return;
+    saveDocument({
+      documentType: selectedType,
+      context,
+      content: result,
+      tone,
+      grade: grade ? Number(grade) : undefined,
+      className: className || undefined,
+    });
+    setShowSavedToast(true);
+    setTimeout(() => setShowSavedToast(false), 2000);
+  };
+
+  const handleTextExtracted = (text: string, fileName: string) => {
+    if (!text) {
+      setUploadedText(null);
+      setUploadedFileName('');
+    } else {
+      setUploadedText(text);
+      setUploadedFileName(fileName);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -69,12 +109,16 @@ export default function DocumentsPage() {
     setResult(null);
 
     try {
+      const contextWithUpload = uploadedText
+        ? context.trim() + '\n\n---参考文書---\n' + uploadedText
+        : context.trim();
+
       const res = await fetch('/api/generate-document', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           documentType: selectedType,
-          context: context.trim(),
+          context: contextWithUpload,
           tone,
           grade: grade ? Number(grade) : undefined,
           className: className || undefined,
@@ -141,11 +185,30 @@ export default function DocumentsPage() {
           </div>
         </div>
 
+        {/* 参考文書アップロード */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            参考文書をアップロード
+            <span className="ml-1 text-xs font-normal text-gray-400">（任意）</span>
+          </label>
+          <FileUpload
+            onTextExtracted={handleTextExtracted}
+            isProcessing={loading}
+          />
+        </div>
+
         {/* コンテキスト入力 */}
         <div>
           <label htmlFor="context" className="block text-sm font-medium text-gray-700 mb-1">
             状況・内容
           </label>
+          {uploadedFileName && (
+            <div className="mb-2 inline-flex items-center gap-1.5 bg-primary-50 text-primary-700 px-3 py-1.5 rounded-md text-xs">
+              <span>📎</span>
+              <span className="font-medium truncate max-w-[240px]">{uploadedFileName}</span>
+              <span>の内容を参考にして生成します</span>
+            </div>
+          )}
           <textarea
             id="context"
             value={context}
@@ -229,8 +292,31 @@ export default function DocumentsPage() {
       {result && (
         <div className="mt-6">
           <GenerationResult content={result} label={documentTypeLabels[selectedType]} />
+          <div className="mt-3 flex justify-end">
+            <button
+              onClick={handleSave}
+              className="flex items-center gap-2 bg-emerald-600 text-white rounded-md px-4 py-2 text-sm font-medium hover:bg-emerald-700 transition-colors"
+            >
+              ライブラリに保存
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* 保存トースト */}
+      {showSavedToast && (
+        <div className="fixed bottom-4 right-4 bg-emerald-600 text-white px-4 py-2 rounded-lg shadow-lg text-sm animate-fade-in">
+          保存しました
         </div>
       )}
     </div>
+  );
+}
+
+export default function DocumentsPage() {
+  return (
+    <Suspense fallback={<div className="max-w-2xl mx-auto py-8 px-4 text-sm text-gray-400">読み込み中...</div>}>
+      <DocumentsPageInner />
+    </Suspense>
   );
 }
