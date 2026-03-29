@@ -13,6 +13,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="flex min-h-screen bg-surface">
         <Sidebar />
         <main className="flex-1 ml-64">
+          <div className="bg-amber-50 border-b border-amber-200 px-4 py-2 text-center">
+            <p className="text-xs text-amber-700">
+              このデータは全て架空のデモデータです。実在の生徒情報は含まれていません。
+            </p>
+          </div>
           <div className="max-w-6xl mx-auto p-6">
             {children}
           </div>
