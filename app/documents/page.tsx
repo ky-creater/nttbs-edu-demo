@@ -8,6 +8,7 @@ import { FileUpload } from '@/components/file-upload';
 import { saveDocument } from '@/lib/document-store';
 import type { DocumentType, Tone } from '@/lib/types';
 import { LlmBadge } from '@/components/llm-badge';
+import { getKnowledgeContext } from '@/lib/knowledge-store';
 
 const documentTypes: {
   value: DocumentType;
@@ -166,9 +167,11 @@ function DocumentsPageInner() {
     setResult(null);
 
     try {
-      const contextWithUpload = uploadedText
-        ? context.trim() + '\n\n---参考文書---\n' + uploadedText
-        : context.trim();
+      const knowledgeCtx = getKnowledgeContext();
+      let fullContext = context.trim();
+      if (uploadedText) fullContext += '\n\n---参考文書---\n' + uploadedText;
+      if (knowledgeCtx) fullContext += '\n\n---ナレッジベース（学校の過去文書）---\n' + knowledgeCtx;
+      const contextWithUpload = fullContext;
 
       const res = await fetch('/api/generate-document', {
         method: 'POST',
