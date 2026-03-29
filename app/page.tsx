@@ -88,7 +88,7 @@ const workflowCategories = [
     color: 'red',
     tasks: [
       { name: '不登校・問題行動への対応', ai: true, aiLabel: 'リスク分析+対応提案', href: '/risk' },
-      { name: 'いじめ・トラブル対応', ai: true, aiLabel: '対応記録+報告書', href: '/documents?type=guidance_record' },
+      { name: 'いじめ・トラブル対応', ai: true, aiLabel: '対応記録+報告書', href: '/risk' },
       { name: '保護者ご相談対応', ai: true, aiLabel: 'ご相談対応の回答文作成', href: '/documents?type=complaint_response' },
     ],
   },
