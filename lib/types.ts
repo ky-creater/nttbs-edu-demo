@@ -27,7 +27,7 @@ export interface SubjectGrade {
   comment?: string;
 }
 
-export type DocumentType = 'class_newsletter' | 'parent_notice' | 'complaint_response' | 'meeting_memo';
+export type DocumentType = 'class_newsletter' | 'parent_notice' | 'complaint_response' | 'meeting_memo' | 'guidance_record' | 'board_report' | 'recommendation' | 'absence_reply' | 'event_speech' | 'training_report';
 
 export type Tone = 'formal' | 'friendly' | 'concise';
 

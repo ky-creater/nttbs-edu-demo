@@ -12,6 +12,12 @@ const TYPE_LABELS: Record<DocumentType, string> = {
   parent_notice: '保護者向け通知',
   complaint_response: 'クレーム対応',
   meeting_memo: '面談メモ',
+  guidance_record: '指導記録',
+  board_report: '教育委員会報告',
+  recommendation: '推薦状・調査書',
+  absence_reply: '欠席連絡返信',
+  event_speech: '行事挨拶文',
+  training_report: '研修報告',
 };
 
 const TYPE_COLORS: Record<DocumentType, string> = {
@@ -19,6 +25,12 @@ const TYPE_COLORS: Record<DocumentType, string> = {
   parent_notice: 'bg-green-100 text-green-700',
   complaint_response: 'bg-red-100 text-red-700',
   meeting_memo: 'bg-purple-100 text-purple-700',
+  guidance_record: 'bg-orange-100 text-orange-700',
+  board_report: 'bg-gray-100 text-gray-700',
+  recommendation: 'bg-yellow-100 text-yellow-700',
+  absence_reply: 'bg-teal-100 text-teal-700',
+  event_speech: 'bg-pink-100 text-pink-700',
+  training_report: 'bg-indigo-100 text-indigo-700',
 };
 
 const FILTER_TABS: { value: DocumentType | 'all'; label: string }[] = [

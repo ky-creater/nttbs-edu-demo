@@ -10,7 +10,7 @@ const client = new Anthropic({
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { studentId, semester } = body as { studentId: string; semester: 1 | 2 | 3 };
+    const { studentId, semester, pastNotes } = body as { studentId: string; semester: 1 | 2 | 3; pastNotes?: string };
 
     if (!studentId || !semester) {
       return NextResponse.json(
@@ -27,7 +27,10 @@ export async function POST(request: Request) {
       );
     }
 
-    const prompt = buildShokenPrompt(student, semester);
+    let prompt = buildShokenPrompt(student, semester);
+    if (pastNotes) {
+      prompt += `\n\n## 過去の所見・担任メモ\n${pastNotes}\n\n上記の過去情報を踏まえ、前回からの成長や変化が伝わるように所見を作成してください。同じ表現の繰り返しを避けてください。`;
+    }
 
     const message = await client.messages.create({
       model: process.env.ANTHROPIC_MODEL ?? 'claude-sonnet-4-20250514',

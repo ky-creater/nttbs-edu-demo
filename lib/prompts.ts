@@ -45,6 +45,12 @@ const documentTypeLabels: Record<DocumentType, string> = {
   parent_notice: '保護者向け通知文',
   complaint_response: 'クレーム対応文書',
   meeting_memo: '面談メモ',
+  guidance_record: '指導記録',
+  board_report: '教育委員会報告書',
+  recommendation: '推薦状・調査書',
+  absence_reply: '欠席連絡への返信',
+  event_speech: '行事挨拶文',
+  training_report: '研修報告',
 };
 
 const toneLabels: Record<Tone, string> = {

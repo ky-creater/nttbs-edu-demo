@@ -10,6 +10,7 @@ type Semester = 1 | 2 | 3;
 export default function ShokenPage() {
   const [selectedStudentId, setSelectedStudentId] = useState<string>('');
   const [semester, setSemester] = useState<Semester>(1);
+  const [pastNotes, setPastNotes] = useState('');
   const [loading, setLoading] = useState(false);
   const [variants, setVariants] = useState<string[] | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -31,6 +32,17 @@ export default function ShokenPage() {
   const totalAbsent = semesterAttendance?.reduce((sum, a) => sum + a.absent, 0) ?? 0;
   const totalLate = semesterAttendance?.reduce((sum, a) => sum + a.late, 0) ?? 0;
 
+  const handleRefine = async (currentText: string, instruction: string): Promise<string> => {
+    const res = await fetch('/api/refine-text', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ currentText, instruction }),
+    });
+    if (!res.ok) throw new Error('修正に失敗しました');
+    const data = await res.json();
+    return data.content;
+  };
+
   const handleGenerate = async () => {
     if (!selectedStudentId) return;
     setLoading(true);
@@ -41,7 +53,7 @@ export default function ShokenPage() {
       const res = await fetch('/api/generate-shoken', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ studentId: selectedStudentId, semester }),
+        body: JSON.stringify({ studentId: selectedStudentId, semester, pastNotes: pastNotes || undefined }),
       });
 
       if (!res.ok) {
@@ -172,6 +184,19 @@ export default function ShokenPage() {
         </div>
       )}
 
+      {/* 過去の所見・メモ */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          過去の所見・メモ <span className="text-xs text-gray-400">（任意）</span>
+        </label>
+        <textarea
+          value={pastNotes}
+          onChange={e => setPastNotes(e.target.value)}
+          placeholder="前学期の所見や日頃のメモがあれば入力してください。AIが前回との差分を踏まえて生成します。"
+          className="min-h-[80px] w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-y"
+        />
+      </div>
+
       {/* 生成ボタン */}
       <button
         onClick={handleGenerate}
@@ -201,6 +226,7 @@ export default function ShokenPage() {
           content={variants[0]}
           variants={variants}
           label="所見ドラフト"
+          onRefine={handleRefine}
         />
       )}
     </div>

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Newspaper, Mail, Shield, ClipboardList } from 'lucide-react';
+import { Newspaper, Mail, Shield, ClipboardList, BookOpen, Building2, Award, Reply, Mic, GraduationCap } from 'lucide-react';
 import { GenerationResult } from '@/components/generation-result';
 import { FileUpload } from '@/components/file-upload';
 import { saveDocument } from '@/lib/document-store';
@@ -38,6 +38,42 @@ const documentTypes: {
     description: '保護者面談の記録・確認事項の整理',
     icon: <ClipboardList className="w-5 h-5" />,
   },
+  {
+    value: 'guidance_record',
+    label: '指導記録',
+    description: '生徒指導の経過・対応を記録',
+    icon: <BookOpen className="w-5 h-5" />,
+  },
+  {
+    value: 'board_report',
+    label: '教育委員会報告',
+    description: '教育委員会への報告書・稟議',
+    icon: <Building2 className="w-5 h-5" />,
+  },
+  {
+    value: 'recommendation',
+    label: '推薦状・調査書',
+    description: '進路に関する推薦文・調査書',
+    icon: <Award className="w-5 h-5" />,
+  },
+  {
+    value: 'absence_reply',
+    label: '欠席連絡返信',
+    description: '保護者からの欠席連絡への返信',
+    icon: <Reply className="w-5 h-5" />,
+  },
+  {
+    value: 'event_speech',
+    label: '行事挨拶文',
+    description: '式典・行事での挨拶原稿',
+    icon: <Mic className="w-5 h-5" />,
+  },
+  {
+    value: 'training_report',
+    label: '研修報告',
+    description: '校内研修・外部研修の記録',
+    icon: <GraduationCap className="w-5 h-5" />,
+  },
 ];
 
 const tones: { value: Tone; label: string }[] = [
@@ -51,6 +87,12 @@ const documentTypeLabels: Record<DocumentType, string> = {
   parent_notice: '保護者向け通知',
   complaint_response: 'クレーム対応文書',
   meeting_memo: '面談メモ',
+  guidance_record: '指導記録',
+  board_report: '教育委員会報告',
+  recommendation: '推薦状・調査書',
+  absence_reply: '欠席連絡返信',
+  event_speech: '行事挨拶文',
+  training_report: '研修報告',
 };
 
 function DocumentsPageInner() {
@@ -88,6 +130,17 @@ function DocumentsPageInner() {
     });
     setShowSavedToast(true);
     setTimeout(() => setShowSavedToast(false), 2000);
+  };
+
+  const handleRefine = async (currentText: string, instruction: string): Promise<string> => {
+    const res = await fetch('/api/refine-text', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ currentText, instruction }),
+    });
+    if (!res.ok) throw new Error('修正に失敗しました');
+    const data = await res.json();
+    return data.content;
   };
 
   const handleTextExtracted = (text: string, fileName: string) => {
@@ -151,7 +204,7 @@ function DocumentsPageInner() {
         {/* 文書タイプ選択 */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">文書タイプ</label>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {documentTypes.map((type) => (
               <button
                 key={type.value}
@@ -291,7 +344,7 @@ function DocumentsPageInner() {
       {/* 結果表示 */}
       {result && (
         <div className="mt-6">
-          <GenerationResult content={result} label={documentTypeLabels[selectedType]} />
+          <GenerationResult content={result} label={documentTypeLabels[selectedType]} onRefine={handleRefine} />
           <div className="mt-3 flex justify-end">
             <button
               onClick={handleSave}
