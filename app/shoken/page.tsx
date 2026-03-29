@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { Loader, FileText, User } from 'lucide-react';
+import { Loader, FileText, User, BookOpen } from 'lucide-react';
 import { mockStudents } from '@/data/mock-students';
 import { GenerationResult } from '@/components/generation-result';
 
@@ -71,9 +71,8 @@ export default function ShokenPage() {
   };
 
   return (
-    <div className="max-w-4xl space-y-6">
-      {/* ページヘッダー */}
-      <div>
+    <div>
+      <div className="mb-6">
         <div className="flex items-center gap-2 mb-1">
           <FileText className="w-5 h-5 text-primary-600" />
           <h1 className="text-xl font-semibold text-gray-900">所見ドラフト生成</h1>
@@ -83,152 +82,143 @@ export default function ShokenPage() {
         </p>
       </div>
 
-      {/* フォームカード */}
-      <div className="bg-white rounded-lg border border-gray-200 p-5 space-y-4">
-        {/* 生徒選択 */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            生徒を選択
-          </label>
-          <select
-            value={selectedStudentId}
-            onChange={e => {
-              setSelectedStudentId(e.target.value);
-              setVariants(null);
-              setError(null);
-            }}
-            className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+        {/* 左カラム: 操作パネル */}
+        <div className="lg:col-span-2 space-y-4">
+          <div className="bg-white rounded-lg border border-gray-200 p-5 space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">生徒を選択</label>
+              <select
+                value={selectedStudentId}
+                onChange={e => { setSelectedStudentId(e.target.value); setVariants(null); setError(null); }}
+                className="w-full border border-gray-200 rounded-md px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              >
+                <option value="">-- 選択してください --</option>
+                {mockStudents.map(s => (
+                  <option key={s.id} value={s.id}>
+                    {s.grade}年{s.class}組 {s.number}番 {s.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">学期</label>
+              <div className="flex gap-4">
+                {([1, 2, 3] as Semester[]).map(s => (
+                  <label key={s} className="flex items-center gap-1.5 cursor-pointer">
+                    <input
+                      type="radio" name="semester" value={s}
+                      checked={semester === s}
+                      onChange={() => { setSemester(s); setVariants(null); setError(null); }}
+                      className="accent-primary-600"
+                    />
+                    <span className="text-sm text-gray-700">{s}学期</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg border border-gray-200 p-5">
+            <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
+              <BookOpen className="w-4 h-4 text-gray-400" />
+              過去の所見・メモ <span className="text-xs text-gray-400 font-normal">（任意）</span>
+            </label>
+            <textarea
+              value={pastNotes}
+              onChange={e => setPastNotes(e.target.value)}
+              placeholder="前学期の所見や日頃のメモがあれば入力してください。AIが前回との差分を踏まえて生成します。"
+              className="min-h-[120px] w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-y"
+            />
+          </div>
+
+          <button
+            onClick={handleGenerate}
+            disabled={!selectedStudentId || loading}
+            className="w-full flex items-center justify-center gap-2 bg-primary-600 text-white px-4 py-2.5 rounded-md text-sm font-medium hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            <option value="">-- 選択してください --</option>
-            {mockStudents.map(s => (
-              <option key={s.id} value={s.id}>
-                {s.grade}年{s.class}組 {s.number}番 {s.name}
-              </option>
-            ))}
-          </select>
+            {loading ? (<><Loader className="w-4 h-4 animate-spin" />生成中...</>) : '生成する'}
+          </button>
         </div>
 
-        {/* 学期選択 */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            学期
-          </label>
-          <div className="flex gap-4">
-            {([1, 2, 3] as Semester[]).map(s => (
-              <label key={s} className="flex items-center gap-1.5 cursor-pointer">
-                <input
-                  type="radio"
-                  name="semester"
-                  value={s}
-                  checked={semester === s}
-                  onChange={() => {
-                    setSemester(s);
-                    setVariants(null);
-                    setError(null);
-                  }}
-                  className="accent-primary-600"
-                />
-                <span className="text-sm text-gray-700">{s}学期</span>
-              </label>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* 生徒情報カード */}
-      {selectedStudent && (
-        <div className="bg-white rounded-lg border border-gray-200 p-5">
-          <div className="flex items-center gap-2 mb-3">
-            <User className="w-4 h-4 text-gray-400" />
-            <span className="text-sm font-medium text-gray-700">生徒情報</span>
-          </div>
-          <div className="grid grid-cols-2 gap-3 text-sm">
-            <div>
-              <span className="text-gray-500">氏名</span>
-              <p className="font-medium text-gray-900 mt-0.5">{selectedStudent.name}</p>
+        {/* 右カラム: 生徒情報 + 結果 */}
+        <div className="lg:col-span-3 space-y-4">
+          {selectedStudent ? (
+            <div className="bg-white rounded-lg border border-gray-200 p-5">
+              <div className="flex items-center gap-2 mb-3">
+                <User className="w-4 h-4 text-gray-400" />
+                <span className="text-sm font-medium text-gray-700">生徒情報</span>
+                <span className="text-[10px] text-gray-400">📊 校務支援システム</span>
+              </div>
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <span className="text-gray-500">氏名</span>
+                  <p className="font-medium text-gray-900 mt-0.5">{selectedStudent.name}</p>
+                </div>
+                <div>
+                  <span className="text-gray-500">クラス</span>
+                  <p className="font-medium text-gray-900 mt-0.5">
+                    {selectedStudent.grade}年{selectedStudent.class}組 {selectedStudent.number}番（{selectedStudent.gender}）
+                  </p>
+                </div>
+                <div>
+                  <span className="text-gray-500">{semester}学期 出欠</span>
+                  <p className="font-medium text-gray-900 mt-0.5">欠席 {totalAbsent}日 / 遅刻 {totalLate}回</p>
+                </div>
+                <div>
+                  <span className="text-gray-500">成績（平均）</span>
+                  <p className="font-medium text-gray-900 mt-0.5">
+                    {Math.round(selectedStudent.grades.reduce((sum, g) => sum + g.score, 0) / selectedStudent.grades.length)}点
+                  </p>
+                </div>
+              </div>
+              {selectedStudent.activities.length > 0 && (
+                <div className="mt-3 flex flex-wrap gap-1.5">
+                  {selectedStudent.activities.map((act, i) => (
+                    <span key={i} className="text-xs bg-primary-50 text-primary-700 px-2 py-0.5 rounded-full">{act}</span>
+                  ))}
+                </div>
+              )}
+              {selectedStudent.notes && (
+                <div className="mt-3 bg-gray-50 rounded-md p-3">
+                  <span className="text-[10px] text-gray-400">📝 担任メモ</span>
+                  <p className="text-sm text-gray-700 mt-0.5">{selectedStudent.notes}</p>
+                </div>
+              )}
+              <div className="mt-3 border-t border-gray-100 pt-3">
+                <h4 className="text-xs font-medium text-gray-500 mb-2">成績詳細</h4>
+                <div className="grid grid-cols-5 gap-2">
+                  {selectedStudent.grades.map(g => (
+                    <div key={g.subject} className="text-center">
+                      <p className="text-[10px] text-gray-400">{g.subject}</p>
+                      <p className="text-sm font-bold text-gray-900">{g.score}</p>
+                      <span className={`text-[10px] px-1.5 py-0.5 rounded ${
+                        g.grade === 'A' ? 'bg-emerald-50 text-emerald-700' :
+                        g.grade === 'B' ? 'bg-blue-50 text-blue-700' :
+                        'bg-amber-50 text-amber-700'
+                      }`}>{g.grade}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
-            <div>
-              <span className="text-gray-500">クラス</span>
-              <p className="font-medium text-gray-900 mt-0.5">
-                {selectedStudent.grade}年{selectedStudent.class}組 {selectedStudent.number}番（{selectedStudent.gender}）
-              </p>
-            </div>
-            <div>
-              <span className="text-gray-500">{semester}学期 出欠サマリ</span>
-              <p className="font-medium text-gray-900 mt-0.5">
-                欠席 {totalAbsent}日 / 遅刻 {totalLate}回
-              </p>
-            </div>
-            <div>
-              <span className="text-gray-500">成績（平均）</span>
-              <p className="font-medium text-gray-900 mt-0.5">
-                {Math.round(
-                  selectedStudent.grades.reduce((sum, g) => sum + g.score, 0) /
-                  selectedStudent.grades.length
-                )}点
-              </p>
-            </div>
-          </div>
-          {selectedStudent.activities.length > 0 && (
-            <div className="mt-3">
-              <span className="text-sm text-gray-500">活動</span>
-              <p className="text-sm text-gray-900 mt-0.5">{selectedStudent.activities.join('、')}</p>
+          ) : (
+            <div className="bg-white rounded-lg border border-gray-200 p-12 text-center">
+              <User className="w-10 h-10 text-gray-300 mx-auto mb-3" />
+              <p className="text-sm text-gray-400">生徒を選択すると、ここに情報が表示されます</p>
             </div>
           )}
-          {selectedStudent.notes && (
-            <div className="mt-3">
-              <span className="text-sm text-gray-500">担任メモ</span>
-              <p className="text-sm text-gray-700 mt-0.5">{selectedStudent.notes}</p>
-            </div>
+
+          {error && (
+            <div className="bg-red-50 border border-red-200 rounded-md px-4 py-3 text-sm text-red-700">{error}</div>
+          )}
+
+          {variants && (
+            <GenerationResult content={variants[0]} variants={variants} label="所見ドラフト" onRefine={handleRefine} />
           )}
         </div>
-      )}
-
-      {/* 過去の所見・メモ */}
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          過去の所見・メモ <span className="text-xs text-gray-400">（任意）</span>
-        </label>
-        <textarea
-          value={pastNotes}
-          onChange={e => setPastNotes(e.target.value)}
-          placeholder="前学期の所見や日頃のメモがあれば入力してください。AIが前回との差分を踏まえて生成します。"
-          className="min-h-[80px] w-full border border-gray-200 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-y"
-        />
       </div>
-
-      {/* 生成ボタン */}
-      <button
-        onClick={handleGenerate}
-        disabled={!selectedStudentId || loading}
-        className="w-full flex items-center justify-center gap-2 bg-primary-600 text-white px-4 py-2.5 rounded-md text-sm font-medium hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-      >
-        {loading ? (
-          <>
-            <Loader className="w-4 h-4 animate-spin" />
-            生成中...
-          </>
-        ) : (
-          '生成する'
-        )}
-      </button>
-
-      {/* エラー表示 */}
-      {error && (
-        <div className="bg-red-50 border border-red-200 rounded-md px-4 py-3 text-sm text-red-700">
-          {error}
-        </div>
-      )}
-
-      {/* 結果表示 */}
-      {variants && (
-        <GenerationResult
-          content={variants[0]}
-          variants={variants}
-          label="所見ドラフト"
-          onRefine={handleRefine}
-        />
-      )}
     </div>
   );
 }
