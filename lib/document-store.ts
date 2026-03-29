@@ -1,4 +1,5 @@
 import type { DocumentType, Tone } from '@/lib/types';
+import { sampleDocuments } from '@/data/sample-documents';
 
 export interface SavedDocument {
   id: string;
@@ -32,9 +33,17 @@ export function saveDocument(doc: Omit<SavedDocument, 'id' | 'createdAt'>): Save
 export function getDocuments(): SavedDocument[] {
   if (typeof window === 'undefined') return [];
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return [];
-    return JSON.parse(raw) as SavedDocument[];
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (!stored) {
+      // 初回アクセス時にデモデータを投入
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(sampleDocuments));
+      return sampleDocuments;
+    }
+    const docs = JSON.parse(stored) as SavedDocument[];
+    if (docs.length === 0) {
+      return sampleDocuments; // 空の場合もデモデータを表示
+    }
+    return docs;
   } catch {
     return [];
   }

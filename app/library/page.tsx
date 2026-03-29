@@ -39,6 +39,12 @@ const FILTER_TABS: { value: DocumentType | 'all'; label: string }[] = [
   { value: 'parent_notice', label: '保護者向け通知' },
   { value: 'complaint_response', label: 'クレーム対応' },
   { value: 'meeting_memo', label: '面談メモ' },
+  { value: 'guidance_record', label: '指導記録' },
+  { value: 'board_report', label: '教育委員会報告' },
+  { value: 'recommendation', label: '推薦状・調査書' },
+  { value: 'absence_reply', label: '欠席連絡返信' },
+  { value: 'event_speech', label: '行事挨拶文' },
+  { value: 'training_report', label: '研修報告' },
 ];
 
 export default function LibraryPage() {
