@@ -186,7 +186,7 @@ export default function DashboardPage() {
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900">ダッシュボード</h1>
         <p className="text-sm text-gray-500 mt-1">
-          校務支援AIプラットフォーム — 校務支援システム（BLEND等）のデータをAIが分析・文書生成
+          校務支援AIプラットフォーム — 校務支援システムのデータをAIが分析・文書生成
         </p>
       </div>
 
@@ -268,7 +268,7 @@ export default function DashboardPage() {
       <div className="mb-8" id="workflow">
         <div className="mb-4">
           <h2 className="text-lg font-semibold text-gray-900">業務マップ — AIで支援できる業務</h2>
-          <p className="text-xs text-gray-500 mt-0.5">校務支援システム（BLEND等）に蓄積されたデータを活用し、文書作成・分析をAIが支援します</p>
+          <p className="text-xs text-gray-500 mt-0.5">校務支援システムに蓄積されたデータを活用し、文書作成・分析をAIが支援します</p>
         </div>
 
         {/* カテゴリカード */}
