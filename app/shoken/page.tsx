@@ -18,6 +18,15 @@ export default function ShokenPage() {
   const [error, setError] = useState<string | null>(null);
   const [observations, setObservations] = useState<Observation[]>([]);
 
+  // URLクエリパラムから生徒を自動選択
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const sid = params.get('studentId');
+    if (sid && mockStudents.some(s => s.id === sid)) {
+      setSelectedStudentId(sid);
+    }
+  }, []);
+
   const selectedStudent = useMemo(
     () => mockStudents.find(s => s.id === selectedStudentId) ?? null,
     [selectedStudentId]
@@ -87,7 +96,7 @@ export default function ShokenPage() {
         <div className="flex items-center justify-between flex-wrap gap-3">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">所見ドラフト生成</h1>
-            <p className="text-sm text-gray-500">
+            <p className="mt-1 text-sm text-gray-500">
               生徒を選択して「生成する」を押すと、通知表所見の3パターンを自動作成します。
             </p>
           </div>

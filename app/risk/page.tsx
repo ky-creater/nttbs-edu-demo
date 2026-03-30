@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { AlertTriangle, TrendingUp, Shield, Users, Brain, ChevronRight, Loader2, ChevronDown } from 'lucide-react';
+import Link from 'next/link';
 import { LlmBadge } from '@/components/llm-badge';
 import { getObservationsText } from '@/lib/observation-store';
 import { mockStudents } from '@/data/mock-students';
@@ -26,6 +27,7 @@ export default function RiskPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [autoTriggered, setAutoTriggered] = useState(false);
 
   const studentsWithRisk: StudentWithRisk[] = useMemo(() => {
     return mockStudents
@@ -59,6 +61,19 @@ export default function RiskPage() {
       setLoading(false);
     }
   };
+
+  // URLクエリパラムから生徒を自動選択+分析起動
+  useEffect(() => {
+    if (autoTriggered) return;
+    const params = new URLSearchParams(window.location.search);
+    const sid = params.get('studentId');
+    const action = params.get('action');
+    if (sid && action === 'analyze' && studentsWithRisk.some(s => s.id === sid)) {
+      setAutoTriggered(true);
+      setExpandedId(sid);
+      handleAnalyze(sid);
+    }
+  }, [studentsWithRisk, autoTriggered]);
 
   const handleToggleExpand = (studentId: string) => {
     setExpandedId(prev => prev === studentId ? null : studentId);
@@ -172,7 +187,9 @@ export default function RiskPage() {
                         key={student.id}
                         className={`hover:bg-gray-50 transition-colors ${isSelected ? 'bg-blue-50' : ''}`}
                       >
-                        <td className="px-4 py-3 text-sm font-medium text-gray-900">{student.name}</td>
+                        <td className="px-4 py-3 text-sm font-medium text-gray-900">
+                          <Link href={`/students/${student.id}`} className="hover:text-primary-600 hover:underline">{student.name}</Link>
+                        </td>
                         <td className="px-4 py-3 text-sm text-gray-600">{student.grade}年{student.class}組</td>
                         <td className="px-4 py-3 text-sm text-right text-gray-700">{totalAbsent}日</td>
                         <td className="px-4 py-3 text-sm text-right text-gray-700">{totalLate}回</td>

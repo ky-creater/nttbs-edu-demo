@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { MessageSquarePlus, Sparkles, Loader2, Plus, Mic, MicOff } from 'lucide-react';
+import Link from 'next/link';
 import { mockStudents } from '@/data/mock-students';
 import { LlmBadge } from '@/components/llm-badge';
 import {
@@ -366,9 +367,9 @@ export default function ObservationsPage() {
               return (
                 <div key={obs.id} className="flex items-start gap-3 px-3 py-2.5 rounded-lg hover:bg-gray-50 transition-colors">
                   <span className="text-xs text-gray-400 shrink-0 w-20">{obs.date}</span>
-                  <span className="text-xs font-medium text-primary-700 bg-primary-50 px-2 py-0.5 rounded shrink-0 w-20 text-center">
+                  <Link href={`/students/${obs.studentId}`} className="text-xs font-medium text-primary-700 bg-primary-50 px-2 py-0.5 rounded shrink-0 w-20 text-center hover:bg-primary-100 transition-colors">
                     {obs.studentName}
-                  </span>
+                  </Link>
                   <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${c.bg} ${c.text} border ${c.border} shrink-0`}>
                     {categoryLabels[obs.category]}
                   </span>
