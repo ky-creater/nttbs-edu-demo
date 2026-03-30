@@ -139,7 +139,7 @@ export default function KnowledgePage() {
       <div className="mb-6">
         <div className="flex items-center justify-between flex-wrap gap-3">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">ナレッジベース</h1>
+            <h1 className="text-2xl font-bold text-gray-900">校内共有メモ</h1>
             <p className="mt-1 text-sm text-gray-500">
               過去の文書をまとめてアップロード。AIが自動分類し、全ての文書生成に反映します。
             </p>

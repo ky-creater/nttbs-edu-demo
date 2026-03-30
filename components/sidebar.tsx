@@ -15,7 +15,7 @@ const navGroups: NavGroup[] = [
       { href: '/', label: 'ダッシュボード', icon: LayoutDashboard },
       { href: '/observations', label: '観察メモ', icon: MessageSquarePlus },
       { href: '/students', label: '生徒一覧', icon: Users },
-      { href: '/risk', label: 'リスク分析', icon: AlertTriangle },
+      { href: '/risk', label: '気になる生徒', icon: AlertTriangle },
     ],
   },
   {
@@ -29,7 +29,7 @@ const navGroups: NavGroup[] = [
   {
     label: '管理',
     items: [
-      { href: '/knowledge', label: 'ナレッジ', icon: BookOpen },
+      { href: '/knowledge', label: '校内共有メモ', icon: BookOpen },
       { href: '/library', label: '文書ライブラリ', icon: Archive },
     ],
   },

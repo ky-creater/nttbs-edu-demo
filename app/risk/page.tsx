@@ -71,8 +71,8 @@ export default function RiskPage() {
         <div className="mb-8">
           <div className="flex items-center justify-between flex-wrap gap-3">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">不登校リスクダッシュボード</h1>
-              <p className="text-sm text-gray-500 mt-1">出欠・成績データをもとにリスクを自動算出し、AIによる個別支援プランを提案します</p>
+              <h1 className="text-2xl font-bold text-gray-900">気になる生徒</h1>
+              <p className="text-sm text-gray-500 mt-1">出欠・成績データから支援が必要な生徒を自動検出し、AIが個別の対応プランを提案します</p>
             </div>
             <LlmBadge />
           </div>

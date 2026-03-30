@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { mockStudents } from '@/data/mock-students';
 import { calculateRiskScore, getRiskLevel, getRiskColor, getRiskLabel } from '@/lib/risk-calculator';
-import { ArrowLeft, FileText, Users, AlertTriangle } from 'lucide-react';
+import { ArrowLeft, FileText, Users, AlertTriangle, PenTool, UserCheck, Mail } from 'lucide-react';
 import { ObservationTimeline } from '@/components/observation-timeline';
 
 const MONTH_LABELS: Record<number, string> = {
@@ -65,6 +65,53 @@ export default function StudentProfilePage({ params }: { params: { id: string } 
           <span className={`text-sm px-3 py-1 rounded-full border font-medium ${colorClass}`}>
             {label}（スコア {score}）
           </span>
+        </div>
+      </div>
+
+      {/* AIアクションハブ — この生徒に対してできること */}
+      <div className="bg-gradient-to-r from-primary-50 to-blue-50 rounded-xl border border-primary-200 p-5 mb-5">
+        <p className="text-xs font-medium text-primary-700 mb-3">この生徒のデータを使って...</p>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
+          <Link
+            href={`/shoken?studentId=${student.id}`}
+            className="bg-white rounded-lg border border-primary-200 p-3 hover:bg-primary-50 hover:border-primary-400 transition-colors flex items-center gap-3"
+          >
+            <FileText className="w-5 h-5 text-primary-600 shrink-0" />
+            <div>
+              <span className="text-sm font-medium text-gray-800 block">所見を書く</span>
+              <span className="text-[11px] text-gray-500">3パターン自動生成</span>
+            </div>
+          </Link>
+          <Link
+            href={`/meeting-prep?studentId=${student.id}`}
+            className="bg-white rounded-lg border border-primary-200 p-3 hover:bg-primary-50 hover:border-primary-400 transition-colors flex items-center gap-3"
+          >
+            <UserCheck className="w-5 h-5 text-primary-600 shrink-0" />
+            <div>
+              <span className="text-sm font-medium text-gray-800 block">面談準備</span>
+              <span className="text-[11px] text-gray-500">論点・質問案を生成</span>
+            </div>
+          </Link>
+          <Link
+            href={`/documents?type=absence_reply&studentName=${encodeURIComponent(student.name)}&className=${student.grade}年${student.class}組`}
+            className="bg-white rounded-lg border border-primary-200 p-3 hover:bg-primary-50 hover:border-primary-400 transition-colors flex items-center gap-3"
+          >
+            <Mail className="w-5 h-5 text-primary-600 shrink-0" />
+            <div>
+              <span className="text-sm font-medium text-gray-800 block">保護者に連絡</span>
+              <span className="text-[11px] text-gray-500">欠席返信・通知文を生成</span>
+            </div>
+          </Link>
+          <Link
+            href={`/risk?studentId=${student.id}&action=analyze`}
+            className="bg-white rounded-lg border border-primary-200 p-3 hover:bg-primary-50 hover:border-primary-400 transition-colors flex items-center gap-3"
+          >
+            <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0" />
+            <div>
+              <span className="text-sm font-medium text-gray-800 block">詳しく分析</span>
+              <span className="text-[11px] text-gray-500">リスク評価・対応提案</span>
+            </div>
+          </Link>
         </div>
       </div>
 
@@ -195,36 +242,6 @@ export default function StudentProfilePage({ params }: { params: { id: string } 
       {/* セクション4: 観察メモ */}
       <ObservationTimeline studentId={student.id} />
 
-      {/* セクション5: AIアクションボタン */}
-      <p className="text-[10px] text-gray-400 mb-2">🤖 上記の校務データをAIが統合分析します</p>
-      <div className="grid grid-cols-3 gap-3">
-        <Link
-          href={`/shoken?studentId=${student.id}`}
-          className="bg-primary-50 border border-primary-200 rounded-lg p-4 hover:bg-primary-100 transition-colors flex flex-col items-center gap-2 text-center"
-        >
-          <FileText className="w-6 h-6 text-primary-600" />
-          <span className="text-sm font-medium text-primary-800">所見を生成</span>
-          <span className="text-xs text-primary-500">学期末所見のドラフト</span>
-        </Link>
-
-        <Link
-          href={`/meeting-prep?studentId=${student.id}`}
-          className="bg-primary-50 border border-primary-200 rounded-lg p-4 hover:bg-primary-100 transition-colors flex flex-col items-center gap-2 text-center"
-        >
-          <Users className="w-6 h-6 text-primary-600" />
-          <span className="text-sm font-medium text-primary-800">面談準備シート</span>
-          <span className="text-xs text-primary-500">保護者面談の準備</span>
-        </Link>
-
-        <Link
-          href={`/risk?studentId=${student.id}&action=analyze`}
-          className="bg-primary-50 border border-primary-200 rounded-lg p-4 hover:bg-primary-100 transition-colors flex flex-col items-center gap-2 text-center"
-        >
-          <AlertTriangle className="w-6 h-6 text-primary-600" />
-          <span className="text-sm font-medium text-primary-800">リスク分析</span>
-          <span className="text-xs text-primary-500">詳細リスク評価</span>
-        </Link>
-      </div>
     </div>
   );
 }

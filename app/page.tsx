@@ -175,15 +175,23 @@ export default function DashboardPage() {
     },
   ];
 
+  // 要対応の生徒リスト
+  const needAttention = studentsWithRisk
+    .filter(s => getRiskLevel(s.riskScore!) !== 'low')
+    .sort((a, b) => (b.riskScore ?? 0) - (a.riskScore ?? 0))
+    .slice(0, 5);
+
   return (
     <div>
-      <div className="mb-8">
+      <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900">ダッシュボード</h1>
-        <p className="text-sm text-gray-500 mt-1">校務支援AIプラットフォーム &#8212; デモ環境</p>
+        <p className="text-sm text-gray-500 mt-1">
+          校務支援AIプラットフォーム — 校務支援システム（BLEND等）のデータをAIが分析・文書生成
+        </p>
       </div>
 
       {/* KPIカード */}
-      <div className="grid grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-4 gap-4 mb-6">
         {kpis.map(kpi => {
           const Icon = kpi.icon;
           return (
@@ -204,11 +212,63 @@ export default function DashboardPage() {
         })}
       </div>
 
+      {/* 今日の要対応 — 教師の朝の起点 */}
+      <div className="bg-white rounded-lg border border-amber-200 shadow-sm mb-6">
+        <div className="px-5 py-3 border-b border-amber-100 bg-amber-50/50">
+          <h2 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
+            <AlertTriangle className="w-4 h-4 text-amber-500" />
+            気になる生徒 — 今日確認したい
+          </h2>
+          <p className="text-[10px] text-gray-500 mt-0.5">出欠・成績データから自動検出。生徒をクリックすると詳細+AI支援に進めます</p>
+        </div>
+        <div className="divide-y divide-gray-100">
+          {needAttention.map(student => (
+            <Link
+              key={student.id}
+              href={`/students/${student.id}`}
+              className="flex items-center justify-between px-5 py-3 hover:bg-gray-50 transition-colors"
+            >
+              <div className="flex items-center gap-4">
+                <div>
+                  <span className="text-sm font-medium text-gray-900">{student.name}</span>
+                  <span className="text-xs text-gray-400 ml-2">{student.grade}年{student.class}組</span>
+                  <p className="text-xs text-gray-400">主要因: {getTopRiskFactor(student)}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-20 h-2 bg-gray-100 rounded-full overflow-hidden">
+                    <div
+                      className={`h-full rounded-full ${
+                        getRiskLevel(student.riskScore!) === 'high' ? 'bg-red-500' : 'bg-amber-400'
+                      }`}
+                      style={{ width: `${student.riskScore}%` }}
+                    />
+                  </div>
+                  <span className={`text-xs font-medium w-8 ${
+                    getRiskLevel(student.riskScore!) === 'high' ? 'text-red-600' : 'text-amber-600'
+                  }`}>
+                    {student.riskScore}点
+                  </span>
+                </div>
+                <span className="text-xs text-primary-500">詳細 →</span>
+              </div>
+            </Link>
+          ))}
+        </div>
+        <div className="px-5 py-2 border-t border-gray-100 flex justify-between items-center">
+          <Link href="/risk" className="text-xs text-primary-600 hover:text-primary-700 font-medium">
+            全生徒の分析を見る →
+          </Link>
+          <span className="text-[10px] text-gray-400">📊 校務支援システム連携データ</span>
+        </div>
+      </div>
+
       {/* 業務マップ */}
       <div className="mb-8" id="workflow">
         <div className="mb-4">
           <h2 className="text-lg font-semibold text-gray-900">業務マップ — AIで支援できる業務</h2>
-          <p className="text-xs text-gray-500 mt-0.5">先生の業務全体像と、AIによる支援可能範囲</p>
+          <p className="text-xs text-gray-500 mt-0.5">校務支援システム（BLEND等）に蓄積されたデータを活用し、文書作成・分析をAIが支援します</p>
         </div>
 
         {/* カテゴリカード */}
@@ -279,51 +339,6 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* 要注意生徒一覧 */}
-      <div className="bg-white rounded-lg border border-gray-200 p-5 shadow-sm">
-        <div className="flex items-center gap-3 mb-3">
-          <h2 className="text-sm font-semibold text-gray-900">支援が必要な生徒一覧</h2>
-          <span className="text-[10px] text-gray-400">📊 出欠・成績データに基づく自動判定</span>
-        </div>
-        <div className="space-y-2">
-          {studentsWithRisk
-            .filter(s => getRiskLevel(s.riskScore!) !== 'low')
-            .sort((a, b) => (b.riskScore ?? 0) - (a.riskScore ?? 0))
-            .slice(0, 5)
-            .map(student => (
-              <div key={student.id} className="flex items-center justify-between py-2 px-3 rounded-md hover:bg-gray-50">
-                <div className="flex items-center gap-3">
-                  <div>
-                    <span className="text-sm font-medium text-gray-900">{student.name}</span>
-                    <span className="text-xs text-gray-400 ml-2">{student.grade}年{student.class}組</span>
-                    <p className="text-xs text-gray-400">主要因: {getTopRiskFactor(student)}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-24 h-2 bg-gray-100 rounded-full overflow-hidden">
-                    <div
-                      className={`h-full rounded-full ${
-                        getRiskLevel(student.riskScore!) === 'high' ? 'bg-red-500' : 'bg-amber-400'
-                      }`}
-                      style={{ width: `${student.riskScore}%` }}
-                    />
-                  </div>
-                  <span className={`text-xs font-medium ${
-                    getRiskLevel(student.riskScore!) === 'high' ? 'text-red-600' : 'text-amber-600'
-                  }`}>
-                    {student.riskScore}点
-                  </span>
-                </div>
-              </div>
-            ))}
-        </div>
-        <Link
-          href="/risk"
-          className="mt-3 inline-block text-xs text-primary-600 hover:text-primary-700 font-medium"
-        >
-          全生徒のリスク分析を見る →
-        </Link>
-      </div>
     </div>
   );
 }
