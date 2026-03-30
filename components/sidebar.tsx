@@ -40,7 +40,7 @@ export function Sidebar() {
 
   return (
     <aside className="fixed left-0 top-0 h-full w-64 bg-navy text-white flex flex-col z-50">
-      <div className="p-5 border-b border-white/10">
+      <Link href="/" className="block p-5 border-b border-white/10 hover:bg-white/5 transition-colors">
         <div className="flex items-center gap-2">
           <Shield className="w-7 h-7 text-primary-400" />
           <div>
@@ -48,7 +48,7 @@ export function Sidebar() {
             <p className="text-[10px] text-white/50">プラットフォーム</p>
           </div>
         </div>
-      </div>
+      </Link>
 
       <nav className="flex-1 py-2 overflow-y-auto">
         {navGroups.map(group => (
