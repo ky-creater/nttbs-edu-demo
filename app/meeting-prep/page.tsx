@@ -13,6 +13,7 @@ import {
   Printer,
   Check,
   Loader2,
+  Download,
 } from 'lucide-react';
 import { mockStudents } from '@/data/mock-students';
 import { LlmBadge } from '@/components/llm-badge';
@@ -133,6 +134,41 @@ function MeetingPrepContent() {
     window.print();
   };
 
+  const handleDownloadWord = async () => {
+    if (!result || !selectedStudent) return;
+    const { generateDocx } = await import('@/lib/docx-export');
+    const lines = [
+      `【面談準備シート】${selectedStudent.name}（${selectedStudent.grade}年${selectedStudent.class}組）`,
+      '',
+      '■ 生徒の現状サマリ',
+      result.summary,
+      '',
+      '■ 話すべき論点',
+      ...result.talkingPoints.map(
+        (p: any, i: number) => `${i + 1}. [${priorityLabel[p.priority]}] ${p.topic}\n   ${p.detail}`
+      ),
+      '',
+      '■ 保護者への質問案',
+      ...result.questionsForParent.map((q: string, i: number) => `${i + 1}. ${q}`),
+      '',
+      '■ 伝えるべきポジティブな点',
+      ...result.positivePoints.map((p: string, i: number) => `${i + 1}. ${p}`),
+      '',
+      '■ 注意事項・配慮点',
+      ...result.cautions.map((c: string, i: number) => `${i + 1}. ${c}`),
+      '',
+      '■ 次回アクション候補',
+      ...result.nextActions.map((a: string, i: number) => `${i + 1}. ${a}`),
+    ];
+    const blob = await generateDocx(lines.join('\n'), 'meeting_memo');
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `面談準備_${selectedStudent.name}.docx`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   // 生徒概要カード用の計算
   const studentSummary = selectedStudent
     ? (() => {
@@ -150,11 +186,11 @@ function MeetingPrepContent() {
     <div className="print:ml-0">
       <div className="max-w-4xl print:p-0">
         {/* ヘッダー */}
-        <div className="mb-8 print:hidden">
+        <div className="mb-6 print:hidden">
           <div className="flex items-center justify-between flex-wrap gap-3">
             <div>
               <h1 className="text-2xl font-bold text-gray-900">面談準備シート</h1>
-              <p className="text-sm text-gray-500">
+              <p className="mt-1 text-sm text-gray-500">
                 保護者面談の論点・質問案をAIが自動生成します
               </p>
             </div>
@@ -315,6 +351,13 @@ function MeetingPrepContent() {
                       <Copy className="w-4 h-4" />
                     )}
                     {copied ? 'コピー完了' : 'コピー'}
+                  </button>
+                  <button
+                    onClick={handleDownloadWord}
+                    className="flex items-center gap-1.5 border border-gray-300 text-gray-700 hover:bg-gray-50 rounded-md px-4 py-2 text-sm transition-colors"
+                  >
+                    <Download className="w-4 h-4" />
+                    Word
                   </button>
                   <button
                     onClick={handlePrint}

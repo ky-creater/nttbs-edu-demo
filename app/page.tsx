@@ -212,6 +212,55 @@ export default function DashboardPage() {
         })}
       </div>
 
+      {/* クラス別比較 */}
+      <div className="bg-white rounded-lg border border-gray-200 shadow-sm mb-6">
+        <div className="px-5 py-3 border-b border-gray-100">
+          <h2 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
+            <Users className="w-4 h-4 text-primary-500" />
+            クラス別比較
+          </h2>
+          <p className="text-[10px] text-gray-400 mt-0.5">📊 校務支援システム連携データ</p>
+        </div>
+        <div className="grid grid-cols-3 divide-x divide-gray-100">
+          {[1, 2, 3].map(classNum => {
+            const classStudents = studentsWithRisk.filter(s => s.class === classNum);
+            const totalAbsent = classStudents.reduce((sum, s) =>
+              sum + s.attendance.reduce((a, m) => a + m.absent, 0), 0
+            );
+            const totalDays = classStudents.reduce((sum, s) =>
+              sum + s.attendance.reduce((a, m) => a + m.present + m.absent, 0), 0
+            );
+            const attendanceRate = totalDays > 0 ? ((totalDays - totalAbsent) / totalDays * 100).toFixed(1) : '0';
+            const avgGrade = classStudents.length > 0
+              ? (classStudents.reduce((sum, s) =>
+                  sum + s.grades.reduce((a, g) => a + g.score, 0) / (s.grades.length || 1), 0
+                ) / classStudents.length).toFixed(0)
+              : '0';
+            const riskCount = classStudents.filter(s => getRiskLevel(s.riskScore!) !== 'low').length;
+
+            return (
+              <div key={classNum} className="px-4 py-3">
+                <p className="text-xs font-medium text-gray-500 mb-2">2年{classNum}組（{classStudents.length}名）</p>
+                <div className="space-y-1.5">
+                  <div className="flex justify-between items-center">
+                    <span className="text-[10px] text-gray-400">出席率</span>
+                    <span className="text-sm font-semibold text-gray-900">{attendanceRate}%</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-[10px] text-gray-400">平均成績</span>
+                    <span className="text-sm font-semibold text-gray-900">{avgGrade}点</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-[10px] text-gray-400">要注意</span>
+                    <span className={`text-sm font-semibold ${riskCount > 0 ? 'text-amber-600' : 'text-emerald-600'}`}>{riskCount}名</span>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
       {/* 今日の要対応 — 教師の朝の起点 */}
       <div className="bg-white rounded-lg border border-amber-200 shadow-sm mb-6">
         <div className="px-5 py-3 border-b border-amber-100 bg-amber-50/50">
