@@ -68,7 +68,7 @@ export default function RiskPage() {
     <div>
       <div className="max-w-7xl">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-6">
           <div className="flex items-center justify-between flex-wrap gap-3">
             <div>
               <h1 className="text-2xl font-bold text-gray-900">気になる生徒</h1>

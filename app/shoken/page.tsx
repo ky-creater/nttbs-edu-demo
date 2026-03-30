@@ -78,7 +78,7 @@ export default function ShokenPage() {
           <div>
             <div className="flex items-center gap-2 mb-1">
               <FileText className="w-5 h-5 text-primary-600" />
-              <h1 className="text-xl font-semibold text-gray-900">所見ドラフト生成</h1>
+              <h1 className="text-2xl font-bold text-gray-900">所見ドラフト生成</h1>
             </div>
             <p className="text-sm text-gray-500">
               生徒を選択して「生成する」を押すと、通知表所見の3パターンを自動作成します。
