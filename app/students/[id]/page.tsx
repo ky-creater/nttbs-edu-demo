@@ -22,7 +22,7 @@ export default function StudentProfilePage({ params }: { params: { id: string } 
 
   if (!student) {
     return (
-      <div className="p-6">
+      <div>
         <Link href="/students" className="text-sm text-primary-600 hover:underline flex items-center gap-1">
           <ArrowLeft className="w-4 h-4" /> 生徒一覧に戻る
         </Link>
@@ -46,7 +46,7 @@ export default function StudentProfilePage({ params }: { params: { id: string } 
   const totalEarlyLeave = student.attendance.reduce((s, m) => s + m.earlyLeave, 0);
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
+    <div className="max-w-4xl">
       {/* 戻るリンク */}
       <Link href="/students" className="inline-flex items-center gap-1 text-sm text-primary-600 hover:underline mb-4">
         <ArrowLeft className="w-4 h-4" />
