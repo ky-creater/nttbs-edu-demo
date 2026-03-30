@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import { Loader, FileText, User, BookOpen } from 'lucide-react';
+import { useState, useMemo, useEffect } from 'react';
+import { Loader, FileText, User, BookOpen, Eye } from 'lucide-react';
 import { mockStudents } from '@/data/mock-students';
 import { GenerationResult } from '@/components/generation-result';
 import { LlmBadge } from '@/components/llm-badge';
+import { getObservations, categoryLabels, categoryColors, type Observation } from '@/lib/observation-store';
 
 type Semester = 1 | 2 | 3;
 
@@ -15,6 +16,7 @@ export default function ShokenPage() {
   const [loading, setLoading] = useState(false);
   const [variants, setVariants] = useState<string[] | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [observations, setObservations] = useState<Observation[]>([]);
 
   const selectedStudent = useMemo(
     () => mockStudents.find(s => s.id === selectedStudentId) ?? null,
@@ -32,6 +34,14 @@ export default function ShokenPage() {
 
   const totalAbsent = semesterAttendance?.reduce((sum, a) => sum + a.absent, 0) ?? 0;
   const totalLate = semesterAttendance?.reduce((sum, a) => sum + a.late, 0) ?? 0;
+
+  useEffect(() => {
+    if (selectedStudentId) {
+      setObservations(getObservations(selectedStudentId));
+    } else {
+      setObservations([]);
+    }
+  }, [selectedStudentId]);
 
   const handleRefine = async (currentText: string, instruction: string): Promise<string> => {
     const res = await fetch('/api/refine-text', {
@@ -213,6 +223,33 @@ export default function ShokenPage() {
             <div className="bg-white rounded-lg border border-gray-200 p-12 text-center">
               <User className="w-10 h-10 text-gray-300 mx-auto mb-3" />
               <p className="text-sm text-gray-400">生徒を選択すると、ここに情報が表示されます</p>
+            </div>
+          )}
+
+          {selectedStudent && observations.length > 0 && (
+            <div className="bg-white rounded-lg border border-gray-200 p-5">
+              <div className="flex items-center gap-2 mb-3">
+                <Eye className="w-4 h-4 text-gray-400" />
+                <span className="text-sm font-medium text-gray-700">観察メモ</span>
+                <span className="text-[10px] text-gray-400">直近の記録</span>
+              </div>
+              <div className="space-y-2">
+                {observations.slice(0, 5).map(obs => {
+                  const c = categoryColors[obs.category];
+                  return (
+                    <div key={obs.id} className="flex items-start gap-2 text-sm">
+                      <span className="text-xs text-gray-400 shrink-0 w-20 pt-0.5">{obs.date}</span>
+                      <span className={`text-[10px] px-1.5 py-0.5 rounded shrink-0 ${c.bg} ${c.text}`}>
+                        {categoryLabels[obs.category]}
+                      </span>
+                      <span className="text-gray-700">{obs.content}</span>
+                    </div>
+                  );
+                })}
+              </div>
+              {observations.length > 5 && (
+                <p className="text-xs text-gray-400 mt-2">他 {observations.length - 5} 件</p>
+              )}
             </div>
           )}
 
