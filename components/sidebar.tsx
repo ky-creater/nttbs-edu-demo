@@ -21,7 +21,7 @@ const navGroups: NavGroup[] = [
   {
     label: '作成',
     items: [
-      { href: '/documents', label: '文書作成', icon: PenTool, matchAlso: ['/shoken'] },
+      { href: '/documents', label: '文書作成', icon: PenTool },
       { href: '/meeting-prep', label: '面談準備', icon: UserCheck },
       { href: '/shoken', label: '所見作成', icon: FileText },
     ],

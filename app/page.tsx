@@ -191,14 +191,14 @@ export default function DashboardPage() {
       </div>
 
       {/* KPIカード */}
-      <div className="grid grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         {kpis.map(kpi => {
           const Icon = kpi.icon;
           return (
-            <div key={kpi.label} className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm">
+            <div key={kpi.label} className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm min-w-0">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs text-gray-500">{kpi.label}</span>
-                <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${kpi.color}`}>
+                <span className="text-xs text-gray-500 whitespace-nowrap">{kpi.label}</span>
+                <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${kpi.color}`}>
                   <Icon className="w-4 h-4" />
                 </div>
               </div>
@@ -206,7 +206,7 @@ export default function DashboardPage() {
                 <span className="text-2xl font-bold text-gray-900">{kpi.value}</span>
                 <span className="text-sm text-gray-400">{kpi.unit}</span>
               </div>
-              <p className="text-[10px] text-gray-400 mt-2">📊 {kpi.source}</p>
+              <p className="text-[10px] text-gray-400 mt-2 truncate">📊 {kpi.source}</p>
             </div>
           );
         })}

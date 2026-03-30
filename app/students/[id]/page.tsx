@@ -78,7 +78,7 @@ export default function StudentProfilePage({ params }: { params: { id: string } 
           >
             <FileText className="w-5 h-5 text-primary-600 shrink-0" />
             <div>
-              <span className="text-sm font-medium text-gray-800 block">所見を書く</span>
+              <span className="text-sm font-medium text-gray-800 block whitespace-nowrap">所見を書く</span>
               <span className="text-[11px] text-gray-500">3パターン自動生成</span>
             </div>
           </Link>
@@ -88,7 +88,7 @@ export default function StudentProfilePage({ params }: { params: { id: string } 
           >
             <UserCheck className="w-5 h-5 text-primary-600 shrink-0" />
             <div>
-              <span className="text-sm font-medium text-gray-800 block">面談準備</span>
+              <span className="text-sm font-medium text-gray-800 block whitespace-nowrap">面談準備</span>
               <span className="text-[11px] text-gray-500">論点・質問案を生成</span>
             </div>
           </Link>
@@ -98,7 +98,7 @@ export default function StudentProfilePage({ params }: { params: { id: string } 
           >
             <Mail className="w-5 h-5 text-primary-600 shrink-0" />
             <div>
-              <span className="text-sm font-medium text-gray-800 block">保護者に連絡</span>
+              <span className="text-sm font-medium text-gray-800 block whitespace-nowrap">保護者に連絡</span>
               <span className="text-[11px] text-gray-500">欠席返信・通知文を生成</span>
             </div>
           </Link>
@@ -108,7 +108,7 @@ export default function StudentProfilePage({ params }: { params: { id: string } 
           >
             <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0" />
             <div>
-              <span className="text-sm font-medium text-gray-800 block">詳しく分析</span>
+              <span className="text-sm font-medium text-gray-800 block whitespace-nowrap">詳しく分析</span>
               <span className="text-[11px] text-gray-500">リスク評価・対応提案</span>
             </div>
           </Link>

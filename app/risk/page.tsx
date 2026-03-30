@@ -66,7 +66,7 @@ export default function RiskPage() {
 
   return (
     <div>
-      <div className="max-w-7xl">
+      <div>
         {/* Header */}
         <div className="mb-6">
           <div className="flex items-center justify-between flex-wrap gap-3">
@@ -79,44 +79,44 @@ export default function RiskPage() {
         </div>
 
         {/* Summary Cards */}
-        <div className="grid grid-cols-3 gap-4 mb-8">
-          <div className="bg-white rounded-lg border border-red-200 p-5 shadow-sm">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center">
-                <AlertTriangle className="w-5 h-5 text-red-500" />
+        <div className="grid grid-cols-3 gap-3 mb-8">
+          <div className="bg-white rounded-lg border border-red-200 p-4 shadow-sm">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-full bg-red-50 flex items-center justify-center flex-shrink-0">
+                <AlertTriangle className="w-4 h-4 text-red-500" />
               </div>
-              <div>
-                <p className="text-xs text-gray-500 uppercase tracking-wide font-medium">要支援</p>
-                <p className="text-3xl font-bold text-red-600">{highCount}</p>
+              <div className="min-w-0">
+                <p className="text-[10px] text-gray-500 font-medium">要支援</p>
+                <p className="text-2xl font-bold text-red-600">{highCount}</p>
               </div>
             </div>
-            <p className="text-xs text-gray-400 mt-2">サポート指標 60 以上</p>
-            <p className="text-[10px] text-gray-400 mt-1">📊 出欠・成績データに基づく自動判定</p>
+            <p className="text-[10px] text-gray-400 mt-2">サポート指標 60 以上</p>
+            <p className="text-[10px] text-gray-400 mt-0.5">📊 出欠・成績データに基づく自動判定</p>
           </div>
-          <div className="bg-white rounded-lg border border-amber-200 p-5 shadow-sm">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center">
-                <TrendingUp className="w-5 h-5 text-amber-500" />
+          <div className="bg-white rounded-lg border border-amber-200 p-4 shadow-sm">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-full bg-amber-50 flex items-center justify-center flex-shrink-0">
+                <TrendingUp className="w-4 h-4 text-amber-500" />
               </div>
-              <div>
-                <p className="text-xs text-gray-500 uppercase tracking-wide font-medium">経過観察</p>
-                <p className="text-3xl font-bold text-amber-600">{mediumCount}</p>
+              <div className="min-w-0">
+                <p className="text-[10px] text-gray-500 font-medium">経過観察</p>
+                <p className="text-2xl font-bold text-amber-600">{mediumCount}</p>
               </div>
             </div>
-            <p className="text-xs text-gray-400 mt-2">サポート指標 30〜59</p>
-            <p className="text-[10px] text-gray-400 mt-1">📊 出欠・成績データに基づく自動判定</p>
+            <p className="text-[10px] text-gray-400 mt-2">サポート指標 30〜59</p>
+            <p className="text-[10px] text-gray-400 mt-0.5">📊 出欠・成績データに基づく自動判定</p>
           </div>
-          <div className="bg-white rounded-lg border border-emerald-200 p-5 shadow-sm">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center">
-                <Shield className="w-5 h-5 text-emerald-500" />
+          <div className="bg-white rounded-lg border border-emerald-200 p-4 shadow-sm">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center flex-shrink-0">
+                <Shield className="w-4 h-4 text-emerald-500" />
               </div>
-              <div>
-                <p className="text-xs text-gray-500 uppercase tracking-wide font-medium">安定</p>
-                <p className="text-3xl font-bold text-emerald-600">{lowCount}</p>
+              <div className="min-w-0">
+                <p className="text-[10px] text-gray-500 font-medium">安定</p>
+                <p className="text-2xl font-bold text-emerald-600">{lowCount}</p>
               </div>
             </div>
-            <p className="text-xs text-gray-400 mt-2">サポート指標 29 以下</p>
+            <p className="text-[10px] text-gray-400 mt-2">サポート指標 29 以下</p>
             <p className="text-[10px] text-gray-400 mt-1">📊 出欠・成績データに基づく自動判定</p>
           </div>
         </div>
@@ -132,10 +132,10 @@ export default function RiskPage() {
             <table className="w-full">
               <thead>
                 <tr className="bg-gray-50 border-b border-gray-100">
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">氏名</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">クラス</th>
-                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">欠席合計</th>
-                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">遅刻合計</th>
+                  <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">氏名</th>
+                  <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">クラス</th>
+                  <th className="px-3 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">欠席</th>
+                  <th className="px-3 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">遅刻</th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" title="出欠・成績データから算出した参考値です">サポート指標 <span className="normal-case text-[10px] text-gray-400 font-normal">(?)</span></th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">レベル</th>
                   <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">アクション</th>

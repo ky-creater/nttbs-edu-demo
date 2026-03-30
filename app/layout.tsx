@@ -12,7 +12,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="ja">
       <body className="flex min-h-screen bg-surface">
         <Sidebar />
-        <main className="flex-1 ml-64">
+        <main className="flex-1 ml-64 overflow-x-hidden">
           <div className="bg-amber-50 border-b border-amber-200 px-4 py-2 text-center">
             <p className="text-xs text-amber-700">
               このデータは全て架空のデモデータです。実在の生徒情報は含まれていません。
