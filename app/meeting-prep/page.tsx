@@ -220,7 +220,7 @@ function MeetingPrepContent() {
                 </div>
                 <div className="text-center">
                   <p className="text-lg font-bold text-gray-900">{studentSummary.score}</p>
-                  <p className="text-[11px] text-gray-500">リスクスコア</p>
+                  <p className="text-[11px] text-gray-500">サポート指標</p>
                 </div>
               </div>
             </div>

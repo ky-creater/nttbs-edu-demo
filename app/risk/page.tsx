@@ -90,7 +90,7 @@ export default function RiskPage() {
                 <p className="text-3xl font-bold text-red-600">{highCount}</p>
               </div>
             </div>
-            <p className="text-xs text-gray-400 mt-2">リスクスコア 60 以上</p>
+            <p className="text-xs text-gray-400 mt-2">サポート指標 60 以上</p>
             <p className="text-[10px] text-gray-400 mt-1">📊 出欠・成績データに基づく自動判定</p>
           </div>
           <div className="bg-white rounded-lg border border-amber-200 p-5 shadow-sm">
@@ -103,7 +103,7 @@ export default function RiskPage() {
                 <p className="text-3xl font-bold text-amber-600">{mediumCount}</p>
               </div>
             </div>
-            <p className="text-xs text-gray-400 mt-2">リスクスコア 30〜59</p>
+            <p className="text-xs text-gray-400 mt-2">サポート指標 30〜59</p>
             <p className="text-[10px] text-gray-400 mt-1">📊 出欠・成績データに基づく自動判定</p>
           </div>
           <div className="bg-white rounded-lg border border-emerald-200 p-5 shadow-sm">
@@ -116,7 +116,7 @@ export default function RiskPage() {
                 <p className="text-3xl font-bold text-emerald-600">{lowCount}</p>
               </div>
             </div>
-            <p className="text-xs text-gray-400 mt-2">リスクスコア 29 以下</p>
+            <p className="text-xs text-gray-400 mt-2">サポート指標 29 以下</p>
             <p className="text-[10px] text-gray-400 mt-1">📊 出欠・成績データに基づく自動判定</p>
           </div>
         </div>
@@ -125,8 +125,8 @@ export default function RiskPage() {
         <div className="bg-white border border-gray-200 rounded-lg shadow-sm mb-8 overflow-hidden">
           <div className="px-5 py-4 border-b border-gray-100 flex items-center gap-2">
             <Users className="w-4 h-4 text-gray-400" />
-            <h2 className="text-sm font-semibold text-gray-700">生徒一覧（リスクスコア降順）</h2>
-            <span className="text-xs text-gray-400 ml-auto">スコア行をクリックで内訳表示</span>
+            <h2 className="text-sm font-semibold text-gray-700">生徒一覧（サポート指標 高い順）</h2>
+            <span className="text-xs text-gray-400 ml-auto">指標行をクリックで内訳表示</span>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full">
@@ -136,7 +136,7 @@ export default function RiskPage() {
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">クラス</th>
                   <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">欠席合計</th>
                   <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">遅刻合計</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">リスクスコア</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" title="出欠・成績データから算出した参考値です">サポート指標 <span className="normal-case text-[10px] text-gray-400 font-normal">(?)</span></th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">レベル</th>
                   <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">アクション</th>
                 </tr>
@@ -213,7 +213,7 @@ export default function RiskPage() {
                         <tr key={`${student.id}-breakdown`}>
                           <td colSpan={7} className="bg-gray-50 border-t border-gray-100 px-6 py-4">
                             <p className="text-xs font-semibold text-gray-600 mb-3">
-                              リスクスコア内訳 — {student.name}
+                              サポート指標内訳 — {student.name}
                             </p>
                             <div className="space-y-3">
                               {/* 欠席率 */}

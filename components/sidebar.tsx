@@ -29,7 +29,7 @@ const navGroups: NavGroup[] = [
   {
     label: '管理',
     items: [
-      { href: '/knowledge', label: '校内共有メモ', icon: BookOpen },
+      { href: '/knowledge', label: '参考資料', icon: BookOpen },
       { href: '/library', label: '文書ライブラリ', icon: Archive },
     ],
   },
