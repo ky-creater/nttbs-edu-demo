@@ -98,10 +98,7 @@ export default function LibraryPage() {
     <div className="max-w-4xl">
       {/* ヘッダー */}
       <div className="mb-6">
-        <div className="flex items-center gap-2 mb-1">
-          <Archive className="w-6 h-6 text-primary-600" />
-          <h1 className="text-2xl font-bold text-gray-900">文書ライブラリ</h1>
-        </div>
+        <h1 className="text-2xl font-bold text-gray-900">文書ライブラリ</h1>
         <p className="text-sm text-gray-500">
           過去に生成した文書をストック。検索・再利用できます。
         </p>

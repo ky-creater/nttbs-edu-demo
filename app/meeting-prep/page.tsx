@@ -153,11 +153,8 @@ function MeetingPrepContent() {
         <div className="mb-8 print:hidden">
           <div className="flex items-center justify-between flex-wrap gap-3">
             <div>
-              <div className="flex items-center gap-3 mb-1">
-                <UserCheck className="w-6 h-6 text-primary-600" />
-                <h1 className="text-2xl font-bold text-gray-900">面談準備シート</h1>
-              </div>
-              <p className="text-sm text-gray-500 ml-9">
+              <h1 className="text-2xl font-bold text-gray-900">面談準備シート</h1>
+              <p className="text-sm text-gray-500">
                 保護者面談の論点・質問案をAIが自動生成します
               </p>
             </div>

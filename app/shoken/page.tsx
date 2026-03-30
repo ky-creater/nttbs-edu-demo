@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
-import { Loader, FileText, User, BookOpen, Eye } from 'lucide-react';
+import { Loader, User, BookOpen, Eye } from 'lucide-react';
 import { mockStudents } from '@/data/mock-students';
 import { GenerationResult } from '@/components/generation-result';
 import { LlmBadge } from '@/components/llm-badge';
@@ -86,10 +86,7 @@ export default function ShokenPage() {
       <div className="mb-6">
         <div className="flex items-center justify-between flex-wrap gap-3">
           <div>
-            <div className="flex items-center gap-2 mb-1">
-              <FileText className="w-5 h-5 text-primary-600" />
-              <h1 className="text-2xl font-bold text-gray-900">所見ドラフト生成</h1>
-            </div>
+            <h1 className="text-2xl font-bold text-gray-900">所見ドラフト生成</h1>
             <p className="text-sm text-gray-500">
               生徒を選択して「生成する」を押すと、通知表所見の3パターンを自動作成します。
             </p>
